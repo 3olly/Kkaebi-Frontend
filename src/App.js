@@ -5,6 +5,7 @@ import GlobalStyle from "./style/GlobalStyle";
 import "./style/normalize.css";
 
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
+import SignupIntroPage from "./pages/SignupPage/SignupIntroPage.jsx";
 
 function App() {
   function setScreenSize() {
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           {/* 로그인 */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signupintro" element={<SignupIntroPage />} />
         </Routes>
       </Router>
     </>
