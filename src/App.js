@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import GlobalStyle from "./style/GlobalStyle";
 import "./style/normalize.css";
+
+import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 
 function App() {
   function setScreenSize() {
@@ -14,7 +16,13 @@ function App() {
   });
   return (
     <>
-      <GlobalStyle />;
+      <GlobalStyle />
+      <Router>
+        <Routes>
+          {/* 로그인 */}
+          <Route path="/login" element={<LoginPage />} />
+        </Routes>
+      </Router>
     </>
   );
 }
