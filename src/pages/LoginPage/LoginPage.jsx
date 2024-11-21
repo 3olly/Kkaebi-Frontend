@@ -112,7 +112,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #fff;
+  background: #fafafa;
   padding-top: 50px;
   padding-left: 20px;
   padding-right: 20px;
@@ -226,9 +226,4 @@ const GoogleLoginButton = styled.button`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-`;
-
-const GoogleIcon = styled.span`
-  font-weight: bold;
-  margin-right: 8px;
 `;
