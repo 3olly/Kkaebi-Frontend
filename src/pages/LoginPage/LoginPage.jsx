@@ -1,24 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import GlobalStyle from "../../style/GlobalStyle";
 import LoginKkabi from "../../images/LoginKkabi.svg";
 
 const LoginPage = () => {
+  const [adjustedMargin, setAdjustedMargin] = useState(85);
+
+  useEffect(() => {
+    const totalHeight = document.body.scrollHeight; // 콘텐츠의 총 높이
+    const windowHeight = window.innerHeight; // 기기의 화면 높이
+    if (totalHeight > windowHeight) {
+      const marginAdjustment = totalHeight - windowHeight;
+      setAdjustedMargin(85 - marginAdjustment); // 화면이 짧으면 margin을 조정
+    }
+  }, []);
+
   return (
     <>
       <GlobalStyle />
       <Container>
-        <Title>
-          우리집이
-          <br />
-          깨끗한 비결,
-          <Highlight>깨비</Highlight>
-        </Title>
-        <Bottom>
-          <CharacterImage src={LoginKkabi} alt="깨비 캐릭터" />
-        </Bottom>
-        <LoginButtons>
+        <TopSection>
+          <Title>
+            우리집이
+            <br />
+            깨끗한 비결,
+            <Highlight>깨비</Highlight>
+          </Title>
+          <Bottom>
+            <CharacterImage src={LoginKkabi} alt="깨비 캐릭터" />
+          </Bottom>
+        </TopSection>
+        <LoginButtons adjustedMargin={adjustedMargin}>
           <NaverLoginButton>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -111,11 +124,15 @@ export default LoginPage;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  justify-content: space-between;
   background: #fafafa;
-  padding-top: 50px;
+  min-height: 100vh;
   padding-left: 20px;
   padding-right: 20px;
+`;
+
+const TopSection = styled.div`
+  margin-top: 50px;
 `;
 
 const Title = styled.h1`
@@ -158,8 +175,9 @@ const CharacterImage = styled.img`
 const LoginButtons = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 50px;
   gap: 16px;
+  margin-bottom: ${(props) => props.adjustedMargin}px;
+  margin-top: 50px;
 `;
 
 const NaverLoginButton = styled.button`
