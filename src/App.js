@@ -6,6 +6,7 @@ import "./style/normalize.css";
 
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import SignupIntroPage from "./pages/SignupPage/SignupIntroPage.jsx";
+import CalendarPage from "./pages/CalendarPage.jsx";
 
 function App() {
   function setScreenSize() {
@@ -23,6 +24,7 @@ function App() {
           {/* 로그인 */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signupintro" element={<SignupIntroPage />} />
+          <Route path="/month" element={<CalendarPage />} />
         </Routes>
       </Router>
     </>
