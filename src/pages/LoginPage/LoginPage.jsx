@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import GlobalStyle from "../../style/GlobalStyle";
-import LoginKkabi from "../../images/LoginKkabi.svg";
+import LoginKkaebi from "../../images/LoginKkaebi.svg";
 
 const LoginPage = () => {
   const [adjustedMargin, setAdjustedMargin] = useState(85);
@@ -28,7 +28,7 @@ const LoginPage = () => {
             <Highlight>깨비</Highlight>
           </Title>
           <Bottom>
-            <CharacterImage src={LoginKkabi} alt="깨비 캐릭터" />
+            <CharacterImage src={LoginKkaebi} alt="깨비 캐릭터" />
           </Bottom>
         </TopSection>
         <LoginButtons adjustedMargin={adjustedMargin}>
