@@ -6,9 +6,9 @@ import GlobalStyle from "../style/GlobalStyle";
 import SignupBackBtn from "../images/SignupBackBtn.svg";
 import KkaebiProfileImg from "../images/KkaebiProfile.svg";
 
-import Header from "../components/Header";
+import BackHeader from "../components/BackHeader";
 
-const CalendarPage = () => {
+const DayPage = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [error, setError] = useState("");
@@ -38,7 +38,7 @@ const CalendarPage = () => {
   return (
     <>
       <GlobalStyle />
-      <Header title="캘린더" />
+      <BackHeader />
       <Container>
         <Top>
           <Kkaebi>
@@ -66,7 +66,7 @@ const CalendarPage = () => {
   );
 };
 
-export default CalendarPage;
+export default DayPage;
 
 const BackBtn = styled.button`
   width: 9px;
