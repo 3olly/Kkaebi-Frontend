@@ -60,7 +60,7 @@ const SignupNamePage = () => {
         <Bottom>
           <NextBtn
             isActive={isButtonActive}
-            onClick={() => isButtonActive && navigate("/signupintro")}
+            onClick={() => isButtonActive && navigate("/signupcodeinput")}
           >
             다음
           </NextBtn>
@@ -86,6 +86,7 @@ const BackBtn = styled.button`
   border: none;
   background: url(${SignupBackBtn}) no-repeat center;
   background-size: contain;
+  cursor: pointer;
 `;
 
 const Container = styled.div`
@@ -197,6 +198,7 @@ const NextBtn = styled.button`
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+  cursor: pointer;
 
   &:hover {
     background-color: ${(props) => (props.isActive ? "#967bd9" : "#bebebe")};
