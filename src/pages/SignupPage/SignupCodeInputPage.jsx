@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -8,6 +8,30 @@ import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
 
 const SignupCodeInputPage = () => {
   const navigate = useNavigate();
+  const [code, setCode] = useState(["", "", "", ""]);
+  const [isButtonActive, setIsButtonActive] = useState(false);
+  const inputsRef = useRef([]);
+
+  const handleInputChange = (index, value) => {
+    if (value.length > 1) return; // 한 글자만 입력 가능
+    const newCode = [...code];
+    newCode[index] = value;
+    setCode(newCode);
+
+    // 자동 포커스 이동
+    if (value && index < 3) {
+      inputsRef.current[index + 1].focus();
+    }
+
+    // 버튼 활성화 조건 확인
+    setIsButtonActive(newCode.every((char) => char !== ""));
+  };
+
+  const handleKeyDown = (index, e) => {
+    if (e.key === "Backspace" && !code[index] && index > 0) {
+      inputsRef.current[index - 1].focus();
+    }
+  };
 
   return (
     <>
@@ -26,17 +50,27 @@ const SignupCodeInputPage = () => {
             <Comment>우리집 코드를 입력해주세요.</Comment>
           </Kkaebi>
           <CodeInput>
-            <Input />
-            <Input />
-            <Input />
-            <Input />
+            {code.map((char, index) => (
+              <Input
+                key={index}
+                value={char}
+                onChange={(e) => handleInputChange(index, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(index, e)}
+                ref={(el) => (inputsRef.current[index] = el)}
+              />
+            ))}
           </CodeInput>
         </Top>
         <Bottom>
           <Question onClick={() => navigate("/signupintro")}>
-            깨비가 처음인가요?
+            우리집 코드가 없나요?
           </Question>
-          <NextBtn onClick={() => navigate("/signupintro")}>다음</NextBtn>
+          <NextBtn
+            isActive={isButtonActive}
+            onClick={() => isButtonActive && navigate("/signupintro")}
+          >
+            다음
+          </NextBtn>
         </Bottom>
       </Container>
     </>
@@ -116,16 +150,14 @@ const CodeInput = styled.div`
 
 const Input = styled.input`
   display: flex;
-  width: 39.25px;
-  height: 40px;
-  padding: 20px;
+  width: 79.25px;
+  height: 80px;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
   border-radius: 8px;
   border: 0.5px solid #cecece;
   background: #fff;
-
   color: #000;
   font-family: Pretendard;
   font-size: 24px;
@@ -165,7 +197,7 @@ const Question = styled.button`
   margin-bottom: 20px;
   cursor: pointer;
   height: 24px;
-  width: 135px;
+  width: 153px;
   border: none;
   background-color: transparent;
 `;
