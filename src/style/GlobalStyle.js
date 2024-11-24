@@ -11,6 +11,7 @@ const GlobalStyle = createGlobalStyle`
     /*max-width: 390px;*/
     box-sizing: border-box;
     font-family: 'Pretendard';
+    background-color: #fafafa;
   }
 `;
 
