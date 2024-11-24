@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -6,30 +6,30 @@ import GlobalStyle from "../../style/GlobalStyle";
 import SignupBackBtn from "../../images/SignupBackBtn.svg";
 import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
 
-const SignupCodeInputPage = () => {
+const SignupNamePage = () => {
   const navigate = useNavigate();
-  const [code, setCode] = useState(["", "", "", ""]);
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
   const [isButtonActive, setIsButtonActive] = useState(false);
-  const inputsRef = useRef([]);
 
-  const handleInputChange = (index, value) => {
-    if (value.length > 1) return; // 한 글자만 입력 가능
-    const newCode = [...code];
-    newCode[index] = value;
-    setCode(newCode);
-
-    // 자동 포커스 이동
-    if (value && index < 3) {
-      inputsRef.current[index + 1].focus();
+  const handleInputChange = (e) => {
+    const inputValue = e.target.value;
+    if (inputValue.length > 8) {
+      setError("이름은 최대 8글자로 작성해주세요.");
+      setIsButtonActive(false); // 비활성화 상태 유지
+    } else if (inputValue.length === 0) {
+      setError("");
+      setIsButtonActive(false); // 값이 없으면 비활성화
+    } else {
+      setError("");
+      setIsButtonActive(true); // 8글자 이하 값이 있으면 활성화
     }
-
-    // 버튼 활성화 조건 확인
-    setIsButtonActive(newCode.every((char) => char !== ""));
+    setName(inputValue);
   };
 
-  const handleKeyDown = (index, e) => {
-    if (e.key === "Backspace" && !code[index] && index > 0) {
-      inputsRef.current[index - 1].focus();
+  const handleInputBlur = () => {
+    if (name.length > 8 || name.length === 0) {
+      setIsButtonActive(false);
     }
   };
 
@@ -40,34 +40,27 @@ const SignupCodeInputPage = () => {
         <BackBtn
           src={SignupBackBtn}
           alt="뒤로가기"
-          onClick={() => navigate("/signupname")}
+          onClick={() => navigate("/signupintro")}
         />
       </Header>
       <Container>
         <Top>
           <Kkaebi>
             <KkaebiProfile src={KkaebiProfileImg} alt="깨비 프로필 이미지" />
-            <Comment>우리집 코드를 입력해주세요.</Comment>
+            <Comment>이름을 알려주세요.</Comment>
           </Kkaebi>
-          <CodeInput>
-            {code.map((char, index) => (
-              <Input
-                key={index}
-                value={char}
-                onChange={(e) => handleInputChange(index, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-                ref={(el) => (inputsRef.current[index] = el)}
-              />
-            ))}
-          </CodeInput>
+          <Input
+            placeholder="ex) 깨비"
+            value={name}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+          />
+          {error && <ErrorMessage>{error}</ErrorMessage>}
         </Top>
         <Bottom>
-          <Question onClick={() => navigate("/signupsethome")}>
-            우리집 코드가 없나요?
-          </Question>
           <NextBtn
             isActive={isButtonActive}
-            onClick={() => isButtonActive && navigate("/signupintro")}
+            onClick={() => isButtonActive && navigate("/signupcodeinput")}
           >
             다음
           </NextBtn>
@@ -77,7 +70,7 @@ const SignupCodeInputPage = () => {
   );
 };
 
-export default SignupCodeInputPage;
+export default SignupNamePage;
 
 const Header = styled.div`
   display: flex;
@@ -140,31 +133,31 @@ const Comment = styled.div`
   line-height: 150%; /* 30px */
 `;
 
-const CodeInput = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-`;
-
 const Input = styled.input`
   display: flex;
-  width: 79.25px;
-  height: 80px;
-  justify-content: center;
+  width: 100%;
+  height: 46px;
+  padding: 20px;
   align-items: center;
-  flex-shrink: 0;
   border-radius: 8px;
   border: 0.5px solid #cecece;
   background: #fff;
   color: #000;
   font-family: Pretendard;
-  font-size: 24px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 1; /* 수직 중앙 정렬 */
-  text-align: center; /* 수평 중앙 정렬 */
+  line-height: normal;
+  box-sizing: border-box; /* 패딩 포함 너비 계산 */
+
+  &::placeholder {
+    color: #787878;
+    font-family: Pretendard;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
 
   &:focus {
     border: 0.5px solid #000; /* 포커스 시 검정색 테두리 */
@@ -172,34 +165,21 @@ const Input = styled.input`
   }
 `;
 
+const ErrorMessage = styled.div`
+  color: #f00;
+  font-family: Pretendard;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-top: 12px;
+  margin-left: 20px;
+`;
+
 const Bottom = styled.div`
   margin-top: 20px;
   display: flex;
   justify-content: center;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Question = styled.button`
-  color: var(--key_purple, #aa91e8);
-  text-align: center;
-  font-family: Pretendard;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 150%; /* 24px */
-  text-decoration-line: underline;
-  text-decoration-style: solid;
-  text-decoration-skip-ink: none;
-  text-decoration-thickness: auto;
-  text-underline-offset: auto;
-  text-underline-position: from-font;
-  margin-bottom: 20px;
-  cursor: pointer;
-  height: 24px;
-  width: 153px;
-  border: none;
-  background-color: transparent;
 `;
 
 const NextBtn = styled.button`
