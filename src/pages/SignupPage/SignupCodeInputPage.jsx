@@ -67,7 +67,7 @@ const SignupCodeInputPage = () => {
           </Question>
           <NextBtn
             isActive={isButtonActive}
-            onClick={() => isButtonActive && navigate("/signupintro")}
+            onClick={() => isButtonActive && navigate("/signupcharacter")}
           >
             다음
           </NextBtn>

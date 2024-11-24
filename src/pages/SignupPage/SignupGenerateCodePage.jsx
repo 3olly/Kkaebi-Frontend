@@ -63,7 +63,7 @@ const SignupGenerateCodePage = () => {
           </CodeInput>
         </Top>
         <Bottom>
-          <NextBtn onClick={() => navigate("/signupintro")}>다음</NextBtn>
+          <NextBtn onClick={() => navigate("/signupcodeinput")}>다음</NextBtn>
         </Bottom>
       </Container>
     </>
