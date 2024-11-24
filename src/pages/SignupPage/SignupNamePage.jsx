@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-import GlobalStyle from "../style/GlobalStyle";
-import SignupBackBtn from "../images/SignupBackBtn.svg";
-import KkaebiProfileImg from "../images/KkaebiProfile.svg";
-
-import Header from "../components/Header";
+import GlobalStyle from "../../style/GlobalStyle";
+import SignupBackBtn from "../../images/SignupBackBtn.svg";
+import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
 
 const SignupNamePage = () => {
   const navigate = useNavigate();
@@ -38,7 +36,13 @@ const SignupNamePage = () => {
   return (
     <>
       <GlobalStyle />
-      <Header title="캘린더" />
+      <Header>
+        <BackBtn
+          src={SignupBackBtn}
+          alt="뒤로가기"
+          onClick={() => navigate("/signupintro")}
+        />
+      </Header>
       <Container>
         <Top>
           <Kkaebi>
@@ -67,6 +71,14 @@ const SignupNamePage = () => {
 };
 
 export default SignupNamePage;
+
+const Header = styled.div`
+  display: flex;
+  padding: 20px;
+  align-items: center;
+  align-self: stretch;
+  background-color: #fafafa;
+`;
 
 const BackBtn = styled.button`
   width: 9px;
