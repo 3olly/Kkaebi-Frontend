@@ -157,6 +157,11 @@ const Input = styled.input`
     font-weight: 400;
     line-height: normal;
   }
+
+  &:focus {
+    border: 0.5px solid #000; /* 포커스 시 검정색 테두리 */
+    outline: none; /* 기본 포커스 효과 제거 */
+  }
 `;
 
 const ErrorMessage = styled.div`
