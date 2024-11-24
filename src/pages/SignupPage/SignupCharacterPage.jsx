@@ -8,30 +8,6 @@ import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
 
 const SignupNamePage = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [error, setError] = useState("");
-  const [isButtonActive, setIsButtonActive] = useState(false);
-
-  const handleInputChange = (e) => {
-    const inputValue = e.target.value;
-    if (inputValue.length > 8) {
-      setError("이름은 최대 8글자로 작성해주세요.");
-      setIsButtonActive(false); // 비활성화 상태 유지
-    } else if (inputValue.length === 0) {
-      setError("");
-      setIsButtonActive(false); // 값이 없으면 비활성화
-    } else {
-      setError("");
-      setIsButtonActive(true); // 8글자 이하 값이 있으면 활성화
-    }
-    setName(inputValue);
-  };
-
-  const handleInputBlur = () => {
-    if (name.length > 8 || name.length === 0) {
-      setIsButtonActive(false);
-    }
-  };
 
   return (
     <>
@@ -40,30 +16,19 @@ const SignupNamePage = () => {
         <BackBtn
           src={SignupBackBtn}
           alt="뒤로가기"
-          onClick={() => navigate("/signupintro")}
+          onClick={() => navigate("/signupcodeinput")}
         />
       </Header>
       <Container>
         <Top>
           <Kkaebi>
             <KkaebiProfile src={KkaebiProfileImg} alt="깨비 프로필 이미지" />
-            <Comment>이름을 알려주세요.</Comment>
+            <Comment>캐릭터설정페이지.</Comment>
           </Kkaebi>
-          <Input
-            placeholder="ex) 깨비"
-            value={name}
-            onChange={handleInputChange}
-            onBlur={handleInputBlur}
-          />
-          {error && <ErrorMessage>{error}</ErrorMessage>}
+          <Input placeholder="ex) 깨비" />
         </Top>
         <Bottom>
-          <NextBtn
-            isActive={isButtonActive}
-            onClick={() => isButtonActive && navigate("/signupcodeinput")}
-          >
-            다음
-          </NextBtn>
+          <NextBtn onClick={() => navigate("/signupcodeinput")}>다음</NextBtn>
         </Bottom>
       </Container>
     </>
