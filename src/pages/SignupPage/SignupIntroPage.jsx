@@ -1,17 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import GlobalStyle from "../../style/GlobalStyle";
 import SignupIntroComment from "../../images/SignupIntroComment.svg";
-import SignupIntroKkabi from "../../images/SignupIntroKkabi.svg";
+import SignupIntroKkaebi from "../../images/SignupIntroKkaebi.svg";
 
 const SignupIntroPage = () => {
+  const navigate = useNavigate();
+
+  // 3초 후 페이지 전환
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate("/signupname");
+    }, 3000);
+
+    // 컴포넌트가 언마운트될 때 타이머를 정리
+    return () => clearTimeout(timer);
+  }, [navigate]);
+
   return (
     <>
       <GlobalStyle />
       <Container>
         <Comment src={SignupIntroComment} alt="깨비 말풍선" />
-        <Character src={SignupIntroKkabi} alt="깨비 캐릭터" />
+        <Character src={SignupIntroKkaebi} alt="깨비 캐릭터" />
       </Container>
     </>
   );
