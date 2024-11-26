@@ -16,6 +16,7 @@ import SignupBestWorkPage from "./pages/SignupPage/SignupBestWorkPage.jsx";
 import SignupKkaebiCommentPage from "./pages/SignupPage/SignupKkaebiCommentPage.jsx";
 
 import HomeMainPage from "./pages/HomePage/HomeMainPage.jsx";
+import MyPage from "./pages/MyPage.jsx";
 
 import DayPage from "./pages/DayPage.jsx";
 
@@ -35,8 +36,6 @@ function App() {
           {/* 로그인 및 회원가입 */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signupintro" element={<SignupIntroPage />} />
-          <Route path="/month" element={<CalendarPage />} />
-          <Route path="/day" element={<DayPage />} />
           <Route path="/signupname" element={<SignupNamePage />} />
           <Route path="/signupcodeinput" element={<SignupCodeInputPage />} />
           <Route path="/signupsethome" element={<SignupSetHomePage />} />
@@ -53,6 +52,13 @@ function App() {
 
           {/* 홈페이지 */}
           <Route path="/homemain" element={<HomeMainPage />} />
+
+          {/* 캘린더 */}
+          <Route path="/month" element={<CalendarPage />} />
+          <Route path="/day" element={<DayPage />} />
+
+          {/* 마이페이지 */}
+          <Route path="/mypage" element={<MyPage />} />
         </Routes>
       </Router>
     </>
