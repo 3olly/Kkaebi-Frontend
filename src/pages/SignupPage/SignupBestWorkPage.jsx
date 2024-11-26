@@ -68,7 +68,7 @@ const SignupBestWorkPage = () => {
             onClick={() => {
               if (selectedCategories.length > 0) {
                 console.log("선택된 카테고리:", selectedCategories);
-                navigate("/signupcodeinput");
+                navigate("/signupkkaebicomment");
               }
             }}
           >
