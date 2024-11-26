@@ -14,6 +14,9 @@ import SignupGenerateCodePage from "./pages/SignupPage/SignupGenerateCodePage.js
 import SignupCharacterPage from "./pages/SignupPage/SignupCharacterPage.jsx";
 import SignupBestWorkPage from "./pages/SignupPage/SignupBestWorkPage.jsx";
 import SignupKkaebiCommentPage from "./pages/SignupPage/SignupKkaebiCommentPage.jsx";
+
+import HomeMainPage from "./pages/HomePage/HomeMainPage.jsx";
+
 import DayPage from "./pages/DayPage.jsx";
 
 function App() {
@@ -29,7 +32,7 @@ function App() {
       <GlobalStyle />
       <Router>
         <Routes>
-          {/* 로그인 */}
+          {/* 로그인 및 회원가입 */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signupintro" element={<SignupIntroPage />} />
           <Route path="/month" element={<CalendarPage />} />
@@ -47,6 +50,9 @@ function App() {
             path="/signupkkaebicomment"
             element={<SignupKkaebiCommentPage />}
           />
+
+          {/* 홈페이지 */}
+          <Route path="/homemain" element={<HomeMainPage />} />
         </Routes>
       </Router>
     </>
