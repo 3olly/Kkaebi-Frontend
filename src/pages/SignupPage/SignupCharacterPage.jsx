@@ -93,7 +93,19 @@ const SignupNamePage = () => {
           </IndicatorContainer>
         </Top>
         <Bottom>
-          <NextBtn onClick={() => navigate("/signupbestwork")}>다음</NextBtn>
+          <NextBtn
+            onClick={() => {
+              const payload = {
+                character: characters[selectedCharacter].id.toString(),
+              };
+              console.log("백엔드로 전달되는 데이터:", payload);
+              navigate("/signupbestwork", {
+                state: payload,
+              });
+            }}
+          >
+            다음
+          </NextBtn>
         </Bottom>
       </Container>
     </>
