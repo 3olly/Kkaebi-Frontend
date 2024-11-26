@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -11,6 +11,7 @@ import X from "../images/X.svg";
 const HomeHeader = ({ title }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -35,10 +36,26 @@ const HomeHeader = ({ title }) => {
     }
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      // 현재 스크롤 위치를 확인하고 상태를 업데이트
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <>
       <GlobalStyle />
-      <Container>
+      <Container isScrolled={isScrolled}>
         <Name>{title}</Name>
         <BtnContainer>
           <NoticeBtn
@@ -59,7 +76,7 @@ const HomeHeader = ({ title }) => {
                 </ModalHeader>
                 <MenuName>메뉴</MenuName>
                 <MenuList>
-                  <li onClick={() => goToPage("/")}>홈</li>
+                  <li onClick={() => goToPage("/homemain")}>홈</li>
                   <li onClick={() => goToPage("/month")}>캘린더</li>
                   <li onClick={() => goToPage("/mypage")}>마이페이지</li>
                 </MenuList>
@@ -85,10 +102,15 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 20px;
+  background-color: #aa91e8;
+
+  // 스크롤 상태에 따라 border-radius 동적 적용
+  border-radius: ${({ isScrolled }) =>
+    isScrolled ? "0px 0px 21px 21px" : "0px"};
+
   img {
     cursor: pointer;
   }
-  background-color: #aa91e8;
 `;
 
 const MenuName = styled.div`
