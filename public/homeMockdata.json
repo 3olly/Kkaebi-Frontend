@@ -1,0 +1,24 @@
+{
+  "house": "rara",
+  "nickname": ".",
+  "userCharacter": 1,
+  "tasks": {
+    "today_completion_rate": "0%",
+    "weekly_completion_rate": "100%",
+    "level": "Lv7. 빛"
+  },
+  "selected_tags": [
+    {
+      "id": 1,
+      "name": "집안일"
+    },
+    {
+      "id": 2,
+      "name": "고양이똥치우기"
+    },
+    {
+      "id": 3,
+      "name": "오렌지"
+    }
+  ]
+}

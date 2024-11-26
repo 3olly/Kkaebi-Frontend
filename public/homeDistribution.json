@@ -1,0 +1,21 @@
+{
+  "house": "Ra Home",
+  "total_house_tasks": 9,
+  "distribution": [
+    {
+      "nickname": "rar",
+      "total_tasks": 5,
+      "distribution_percentage": "55%"
+    },
+    {
+      "nickname": "asdasd",
+      "total_tasks": 2,
+      "distribution_percentage": "22%"
+    },
+    {
+      "nickname": "yongja",
+      "total_tasks": 2,
+      "distribution_percentage": "22%"
+    }
+  ]
+}
