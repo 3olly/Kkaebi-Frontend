@@ -48,7 +48,7 @@ const Header = ({ title }) => {
           />
           <Hamburger src={Menu} alt="hamburger menu" onClick={openModal} />
           {isModalOpen && (
-            <Modal isClosing={isClosing}>
+            <Modal $isClosing={isClosing}>
               <ModalContainer>
                 <ModalHeader>
                   <CloseButton
@@ -59,7 +59,7 @@ const Header = ({ title }) => {
                 </ModalHeader>
                 <MenuName>메뉴</MenuName>
                 <MenuList>
-                  <li onClick={() => goToPage("/")}>홈</li>
+                  <li onClick={() => goToPage("/homemain")}>홈</li>
                   <li onClick={() => goToPage("/month")}>캘린더</li>
                   <li onClick={() => goToPage("/mypage")}>마이페이지</li>
                 </MenuList>
