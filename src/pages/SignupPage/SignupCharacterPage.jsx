@@ -87,13 +87,13 @@ const SignupNamePage = () => {
             {characters.map((_, index) => (
               <Indicator
                 key={index}
-                isActive={index === selectedCharacter}
+                $isActive={index === selectedCharacter}
               ></Indicator>
             ))}
           </IndicatorContainer>
         </Top>
         <Bottom>
-          <NextBtn onClick={() => navigate("/signupcodeinput")}>다음</NextBtn>
+          <NextBtn onClick={() => navigate("/signupbestwork")}>다음</NextBtn>
         </Bottom>
       </Container>
     </>
@@ -205,7 +205,7 @@ const Indicator = styled.div`
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: ${(props) => (props.isActive ? "#AA91E8" : "#BEBEBE")};
+  background-color: ${(props) => (props.$isActive ? "#AA91E8" : "#BEBEBE")};
 `;
 
 const Bottom = styled.div`

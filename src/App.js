@@ -12,6 +12,7 @@ import SignupCodeInputPage from "./pages/SignupPage/SignupCodeInputPage.jsx";
 import SignupSetHomePage from "./pages/SignupPage/SignupSetHomePage.jsx";
 import SignupGenerateCodePage from "./pages/SignupPage/SignupGenerateCodePage.jsx";
 import SignupCharacterPage from "./pages/SignupPage/SignupCharacterPage.jsx";
+import SignupBestWorkPage from "./pages/SignupPage/SignupBestWorkPage.jsx";
 import DayPage from "./pages/DayPage.jsx";
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
             element={<SignupGenerateCodePage />}
           />
           <Route path="/signupcharacter" element={<SignupCharacterPage />} />
+          <Route path="/signupbestwork" element={<SignupBestWorkPage />} />
         </Routes>
       </Router>
     </>
