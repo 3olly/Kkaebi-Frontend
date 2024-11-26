@@ -3,91 +3,34 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 import GlobalStyle from "../../style/GlobalStyle";
-import SignupBackBtn from "../../images/SignupBackBtn.svg";
+
+import Header from "../../components/HomeHeader.jsx";
+
 import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
 
-const SignupNamePage = () => {
+const HomeMainPage = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [error, setError] = useState("");
-  const [isButtonActive, setIsButtonActive] = useState(false);
-
-  const handleInputChange = (e) => {
-    const inputValue = e.target.value;
-    if (inputValue.length > 8) {
-      setError("이름은 최대 8글자로 작성해주세요.");
-      setIsButtonActive(false); // 비활성화 상태 유지
-    } else if (inputValue.length === 0) {
-      setError("");
-      setIsButtonActive(false); // 값이 없으면 비활성화
-    } else {
-      setError("");
-      setIsButtonActive(true); // 8글자 이하 값이 있으면 활성화
-    }
-    setName(inputValue);
-  };
-
-  const handleInputBlur = () => {
-    if (name.length > 8 || name.length === 0) {
-      setIsButtonActive(false);
-    }
-  };
 
   return (
     <>
       <GlobalStyle />
-      <Header>
-        <BackBtn
-          src={SignupBackBtn}
-          alt="뒤로가기"
-          onClick={() => navigate("/signupintro")}
-        />
-      </Header>
+      <Header title="홈페이지" />
       <Container>
         <Top>
           <Kkaebi>
             <KkaebiProfile src={KkaebiProfileImg} alt="깨비 프로필 이미지" />
-            <Comment>이름을 알려주세요.</Comment>
+            <Comment>홈페이지</Comment>
           </Kkaebi>
-          <Input
-            placeholder="ex) 깨비"
-            value={name}
-            onChange={handleInputChange}
-            onBlur={handleInputBlur}
-          />
-          {error && <ErrorMessage>{error}</ErrorMessage>}
         </Top>
         <Bottom>
-          <NextBtn
-            $isActive={isButtonActive}
-            onClick={() => isButtonActive && navigate("/signupcodeinput")}
-          >
-            다음
-          </NextBtn>
+          <NextBtn onClick={() => navigate("/signupcodeinput")}>다음</NextBtn>
         </Bottom>
       </Container>
     </>
   );
 };
 
-export default SignupNamePage;
-
-const Header = styled.div`
-  display: flex;
-  padding: 20px;
-  align-items: center;
-  align-self: stretch;
-  background-color: #fafafa;
-`;
-
-const BackBtn = styled.button`
-  width: 9px;
-  height: 18px;
-  border: none;
-  background: url(${SignupBackBtn}) no-repeat center;
-  background-size: contain;
-  cursor: pointer;
-`;
+export default HomeMainPage;
 
 const Container = styled.div`
   display: flex;

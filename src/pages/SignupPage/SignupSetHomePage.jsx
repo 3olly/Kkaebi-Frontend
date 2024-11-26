@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -6,31 +6,12 @@ import GlobalStyle from "../../style/GlobalStyle";
 import SignupBackBtn from "../../images/SignupBackBtn.svg";
 import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
 
-const SignupCodeInputPage = () => {
+const SignupSetHomePage = () => {
   const navigate = useNavigate();
-  const [code, setCode] = useState(["", "", "", ""]);
-  const [isButtonActive, setIsButtonActive] = useState(false);
-  const inputsRef = useRef([]);
+  const [inputValue, setInputValue] = useState("");
 
-  const handleInputChange = (index, value) => {
-    if (value.length > 1) return; // 한 글자만 입력 가능
-    const newCode = [...code];
-    newCode[index] = value;
-    setCode(newCode);
-
-    // 자동 포커스 이동
-    if (value && index < 3) {
-      inputsRef.current[index + 1].focus();
-    }
-
-    // 버튼 활성화 조건 확인
-    setIsButtonActive(newCode.every((char) => char !== ""));
-  };
-
-  const handleKeyDown = (index, e) => {
-    if (e.key === "Backspace" && !code[index] && index > 0) {
-      inputsRef.current[index - 1].focus();
-    }
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
   };
 
   return (
@@ -40,34 +21,32 @@ const SignupCodeInputPage = () => {
         <BackBtn
           src={SignupBackBtn}
           alt="뒤로가기"
-          onClick={() => navigate("/signupname")}
+          onClick={() => navigate("/signupcodeinput")}
         />
       </Header>
       <Container>
         <Top>
           <Kkaebi>
             <KkaebiProfile src={KkaebiProfileImg} alt="깨비 프로필 이미지" />
-            <Comment>우리집 코드를 입력해주세요.</Comment>
+            <Comment>우리 집 이름을 알려주세요.</Comment>
           </Kkaebi>
-          <CodeInput>
-            {code.map((char, index) => (
-              <Input
-                key={index}
-                value={char}
-                onChange={(e) => handleInputChange(index, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-                ref={(el) => (inputsRef.current[index] = el)}
-              />
-            ))}
-          </CodeInput>
+          <InputBox>
+            <Input
+              placeholder="ex) 깨비"
+              value={inputValue}
+              onChange={handleInputChange}
+            />
+            <House>하우스</House>
+          </InputBox>
         </Top>
         <Bottom>
-          <Question onClick={() => navigate("/signupsethome")}>
-            우리집 코드가 없나요?
-          </Question>
           <NextBtn
-            $isActive={isButtonActive}
-            onClick={() => isButtonActive && navigate("/signupcharacter")}
+            $isActive={inputValue.trim() !== ""}
+            onClick={() => {
+              if (inputValue.trim() !== "") {
+                navigate("/signupgeneratecode");
+              }
+            }}
           >
             다음
           </NextBtn>
@@ -77,7 +56,7 @@ const SignupCodeInputPage = () => {
   );
 };
 
-export default SignupCodeInputPage;
+export default SignupSetHomePage;
 
 const Header = styled.div`
   display: flex;
@@ -140,66 +119,58 @@ const Comment = styled.div`
   line-height: 150%; /* 30px */
 `;
 
-const CodeInput = styled.div`
+const InputBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
+  width: 100%;
 `;
 
 const Input = styled.input`
-  display: flex;
-  width: 79.25px;
-  height: 80px;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
+  flex: 1;
+  height: 46px;
+  padding: 10px 16px;
   border-radius: 8px;
   border: 0.5px solid #cecece;
   background: #fff;
   color: #000;
   font-family: Pretendard;
-  font-size: 24px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 1; /* 수직 중앙 정렬 */
-  text-align: center; /* 수평 중앙 정렬 */
+  line-height: normal;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: #787878;
+    font-family: Pretendard;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
 
   &:focus {
-    border: 0.5px solid #000; /* 포커스 시 검정색 테두리 */
-    outline: none; /* 기본 포커스 효과 제거 */
+    border: 0.5px solid #000;
+    outline: none;
   }
+`;
+
+const House = styled.div`
+  margin-left: 16px;
+  color: #000;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
 `;
 
 const Bottom = styled.div`
   margin-top: 20px;
   display: flex;
   justify-content: center;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Question = styled.button`
-  color: var(--key_purple, #aa91e8);
-  text-align: center;
-  font-family: Pretendard;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 150%; /* 24px */
-  text-decoration-line: underline;
-  text-decoration-style: solid;
-  text-decoration-skip-ink: none;
-  text-decoration-thickness: auto;
-  text-underline-offset: auto;
-  text-underline-position: from-font;
-  margin-bottom: 20px;
-  cursor: pointer;
-  height: 24px;
-  width: 153px;
-  border: none;
-  background-color: transparent;
 `;
 
 const NextBtn = styled.button`
@@ -211,14 +182,13 @@ const NextBtn = styled.button`
     props.$isActive ? "var(--key_purple, #AA91E8)" : "#bebebe"};
   justify-content: center;
   align-items: center;
-  cursor: ${(props) => (props.$isActive ? "pointer" : "default")};
+  cursor: ${(props) => (props.$isActive ? "pointer" : "not-allowed")};
   color: #fff;
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  cursor: pointer;
 
   &:hover {
     background-color: ${(props) => (props.$isActive ? "#967bd9" : "#bebebe")};

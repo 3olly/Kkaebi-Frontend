@@ -9,6 +9,14 @@ import SignupIntroPage from "./pages/SignupPage/SignupIntroPage.jsx";
 import CalendarPage from "./pages/CalendarPage.jsx";
 import SignupNamePage from "./pages/SignupPage/SignupNamePage.jsx";
 import SignupCodeInputPage from "./pages/SignupPage/SignupCodeInputPage.jsx";
+import SignupSetHomePage from "./pages/SignupPage/SignupSetHomePage.jsx";
+import SignupGenerateCodePage from "./pages/SignupPage/SignupGenerateCodePage.jsx";
+import SignupCharacterPage from "./pages/SignupPage/SignupCharacterPage.jsx";
+import SignupBestWorkPage from "./pages/SignupPage/SignupBestWorkPage.jsx";
+import SignupKkaebiCommentPage from "./pages/SignupPage/SignupKkaebiCommentPage.jsx";
+
+import HomeMainPage from "./pages/HomePage/HomeMainPage.jsx";
+
 import DayPage from "./pages/DayPage.jsx";
 
 function App() {
@@ -24,13 +32,27 @@ function App() {
       <GlobalStyle />
       <Router>
         <Routes>
-          {/* 로그인 */}
+          {/* 로그인 및 회원가입 */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signupintro" element={<SignupIntroPage />} />
           <Route path="/month" element={<CalendarPage />} />
           <Route path="/day" element={<DayPage />} />
           <Route path="/signupname" element={<SignupNamePage />} />
           <Route path="/signupcodeinput" element={<SignupCodeInputPage />} />
+          <Route path="/signupsethome" element={<SignupSetHomePage />} />
+          <Route
+            path="/signupgeneratecode"
+            element={<SignupGenerateCodePage />}
+          />
+          <Route path="/signupcharacter" element={<SignupCharacterPage />} />
+          <Route path="/signupbestwork" element={<SignupBestWorkPage />} />
+          <Route
+            path="/signupkkaebicomment"
+            element={<SignupKkaebiCommentPage />}
+          />
+
+          {/* 홈페이지 */}
+          <Route path="/homemain" element={<HomeMainPage />} />
         </Routes>
       </Router>
     </>

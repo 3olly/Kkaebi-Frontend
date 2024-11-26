@@ -6,30 +6,27 @@ import GlobalStyle from "../../style/GlobalStyle";
 import SignupBackBtn from "../../images/SignupBackBtn.svg";
 import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
 
-const SignupNamePage = () => {
+const categories = [
+  "빨래",
+  "설거지",
+  "청소",
+  "생필품 구매",
+  "쓰레기 버리기",
+  "분리수거",
+  "요리",
+  "식물 관리",
+  "반려동물 관리",
+];
+
+const SignupBestWorkPage = () => {
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [error, setError] = useState("");
-  const [isButtonActive, setIsButtonActive] = useState(false);
 
-  const handleInputChange = (e) => {
-    const inputValue = e.target.value;
-    if (inputValue.length > 8) {
-      setError("이름은 최대 8글자로 작성해주세요.");
-      setIsButtonActive(false); // 비활성화 상태 유지
-    } else if (inputValue.length === 0) {
-      setError("");
-      setIsButtonActive(false); // 값이 없으면 비활성화
+  const toggleCategory = (category) => {
+    if (selectedCategories.includes(category)) {
+      setSelectedCategories((prev) => prev.filter((item) => item !== category));
     } else {
-      setError("");
-      setIsButtonActive(true); // 8글자 이하 값이 있으면 활성화
-    }
-    setName(inputValue);
-  };
-
-  const handleInputBlur = () => {
-    if (name.length > 8 || name.length === 0) {
-      setIsButtonActive(false);
+      setSelectedCategories((prev) => [...prev, category]);
     }
   };
 
@@ -40,29 +37,49 @@ const SignupNamePage = () => {
         <BackBtn
           src={SignupBackBtn}
           alt="뒤로가기"
-          onClick={() => navigate("/signupintro")}
+          onClick={() => navigate("/signupcharacter")}
         />
       </Header>
       <Container>
         <Top>
           <Kkaebi>
             <KkaebiProfile src={KkaebiProfileImg} alt="깨비 프로필 이미지" />
-            <Comment>이름을 알려주세요.</Comment>
+            <Comment>
+              거의 다 왔어요!
+              <br />
+              자신있는 집안일을 선택해주세요.
+            </Comment>
           </Kkaebi>
-          <Input
-            placeholder="ex) 깨비"
-            value={name}
-            onChange={handleInputChange}
-            onBlur={handleInputBlur}
-          />
-          {error && <ErrorMessage>{error}</ErrorMessage>}
+          <CategoryContainer>
+            {categories.map((category) => (
+              <CategoryButton
+                key={category}
+                $isSelected={selectedCategories.includes(category)}
+                onClick={() => toggleCategory(category)}
+              >
+                {category}
+              </CategoryButton>
+            ))}
+          </CategoryContainer>
         </Top>
         <Bottom>
           <NextBtn
-            $isActive={isButtonActive}
-            onClick={() => isButtonActive && navigate("/signupcodeinput")}
+            $isActive={selectedCategories.length > 0}
+            onClick={() => {
+              if (selectedCategories.length > 0) {
+                // 선택된 카테고리의 인덱스 기반으로 번호 생성
+                const houseworkTag = selectedCategories
+                  .map((category) => categories.indexOf(category) + 1)
+                  .join(", ");
+
+                const payload = { houseworkTag };
+
+                console.log("백엔드로 전달되는 데이터:", payload);
+                navigate("/signupkkaebicomment");
+              }
+            }}
           >
-            다음
+            시작하기
           </NextBtn>
         </Bottom>
       </Container>
@@ -70,7 +87,7 @@ const SignupNamePage = () => {
   );
 };
 
-export default SignupNamePage;
+export default SignupBestWorkPage;
 
 const Header = styled.div`
   display: flex;
@@ -95,8 +112,8 @@ const Container = styled.div`
   justify-content: space-between;
   padding: 0 20px;
   background-color: #fafafa;
-  height: calc(100vh - 132px); /* Header 패딩과 NextBtn 마진 포함 */
-  overflow: hidden; /* 스크롤 숨기기 */
+  height: calc(100vh - 132px);
+  overflow: hidden;
   padding-bottom: 74px;
 `;
 
@@ -114,7 +131,7 @@ const Kkaebi = styled.div`
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
-  line-height: 150%; /* 30px */
+  line-height: 150%;
   margin-bottom: 20px;
 `;
 
@@ -130,50 +147,27 @@ const Comment = styled.div`
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
-  line-height: 150%; /* 30px */
+  line-height: 150%;
 `;
 
-const Input = styled.input`
+const CategoryContainer = styled.div`
   display: flex;
-  width: 100%;
-  height: 46px;
-  padding: 20px;
-  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+`;
+
+const CategoryButton = styled.button`
+  padding: 20px 20px;
   border-radius: 8px;
-  border: 0.5px solid #cecece;
-  background: #fff;
-  color: #000;
+  border: 0.5px solid ${(props) => (props.$isSelected ? "#AA91E8" : "#cecece")};
+  background-color: ${(props) => (props.$isSelected ? "#E4D9FF" : "#FFF")};
+  color: ${(props) => (props.$isSelected ? "#000" : "#787878")};
   font-family: Pretendard;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  box-sizing: border-box; /* 패딩 포함 너비 계산 */
-
-  &::placeholder {
-    color: #787878;
-    font-family: Pretendard;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-  }
-
-  &:focus {
-    border: 0.5px solid #000; /* 포커스 시 검정색 테두리 */
-    outline: none; /* 기본 포커스 효과 제거 */
-  }
-`;
-
-const ErrorMessage = styled.div`
-  color: #f00;
-  font-family: Pretendard;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  margin-top: 12px;
-  margin-left: 20px;
+  cursor: pointer;
 `;
 
 const Bottom = styled.div`
@@ -191,14 +185,13 @@ const NextBtn = styled.button`
     props.$isActive ? "var(--key_purple, #AA91E8)" : "#bebebe"};
   justify-content: center;
   align-items: center;
-  cursor: ${(props) => (props.$isActive ? "pointer" : "default")};
   color: #fff;
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  cursor: pointer;
+  cursor: ${(props) => (props.$isActive ? "pointer" : "default")};
 
   &:hover {
     background-color: ${(props) => (props.$isActive ? "#967bd9" : "#bebebe")};

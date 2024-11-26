@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -6,32 +6,28 @@ import GlobalStyle from "../../style/GlobalStyle";
 import SignupBackBtn from "../../images/SignupBackBtn.svg";
 import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
 
-const SignupCodeInputPage = () => {
+const SignupGenerateCodePage = () => {
   const navigate = useNavigate();
   const [code, setCode] = useState(["", "", "", ""]);
-  const [isButtonActive, setIsButtonActive] = useState(false);
+  const [houseName, setHouseName] = useState(""); // housename 상태 추가
   const inputsRef = useRef([]);
 
-  const handleInputChange = (index, value) => {
-    if (value.length > 1) return; // 한 글자만 입력 가능
-    const newCode = [...code];
-    newCode[index] = value;
-    setCode(newCode);
+  useEffect(() => {
+    // Mock 데이터 가져오기
+    const fetchMockData = async () => {
+      try {
+        const response = await fetch("/mockdata.json");
+        const data = await response.json();
+        const housecodeArray = data.data.housecode.split(""); // 한 글자씩 배열로 변환
+        setCode(housecodeArray); // 상태에 저장
+        setHouseName(data.data.housename); // housename 설정
+      } catch (error) {
+        console.error("Error fetching mock data:", error);
+      }
+    };
 
-    // 자동 포커스 이동
-    if (value && index < 3) {
-      inputsRef.current[index + 1].focus();
-    }
-
-    // 버튼 활성화 조건 확인
-    setIsButtonActive(newCode.every((char) => char !== ""));
-  };
-
-  const handleKeyDown = (index, e) => {
-    if (e.key === "Backspace" && !code[index] && index > 0) {
-      inputsRef.current[index - 1].focus();
-    }
-  };
+    fetchMockData();
+  }, []);
 
   return (
     <>
@@ -40,44 +36,41 @@ const SignupCodeInputPage = () => {
         <BackBtn
           src={SignupBackBtn}
           alt="뒤로가기"
-          onClick={() => navigate("/signupname")}
+          onClick={() => navigate("/signupsethome")}
         />
       </Header>
       <Container>
         <Top>
           <Kkaebi>
             <KkaebiProfile src={KkaebiProfileImg} alt="깨비 프로필 이미지" />
-            <Comment>우리집 코드를 입력해주세요.</Comment>
+            <Comment>
+              <HouseName>
+                <Comment1>{houseName}</Comment1> {/* housename 동적 표시 */}
+                <Comment2>의</Comment2>
+              </HouseName>
+              <Comment3>우리집 코드를 생성했어요!</Comment3>
+            </Comment>
           </Kkaebi>
           <CodeInput>
             {code.map((char, index) => (
               <Input
                 key={index}
                 value={char}
-                onChange={(e) => handleInputChange(index, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
+                readOnly // 읽기 전용으로 설정
                 ref={(el) => (inputsRef.current[index] = el)}
               />
             ))}
           </CodeInput>
         </Top>
         <Bottom>
-          <Question onClick={() => navigate("/signupsethome")}>
-            우리집 코드가 없나요?
-          </Question>
-          <NextBtn
-            $isActive={isButtonActive}
-            onClick={() => isButtonActive && navigate("/signupcharacter")}
-          >
-            다음
-          </NextBtn>
+          <NextBtn onClick={() => navigate("/signupcodeinput")}>다음</NextBtn>
         </Bottom>
       </Container>
     </>
   );
 };
 
-export default SignupCodeInputPage;
+export default SignupGenerateCodePage;
 
 const Header = styled.div`
   display: flex;
@@ -132,6 +125,34 @@ const KkaebiProfile = styled.img`
 `;
 
 const Comment = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const HouseName = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const Comment1 = styled.div`
+  color: var(--key_purple, #aa91e8);
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%; /* 30px */
+`;
+
+const Comment2 = styled.div`
+  color: #000;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+`;
+
+const Comment3 = styled.div`
   color: #000;
   font-family: Pretendard;
   font-size: 20px;
@@ -180,47 +201,23 @@ const Bottom = styled.div`
   align-items: center;
 `;
 
-const Question = styled.button`
-  color: var(--key_purple, #aa91e8);
-  text-align: center;
-  font-family: Pretendard;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 150%; /* 24px */
-  text-decoration-line: underline;
-  text-decoration-style: solid;
-  text-decoration-skip-ink: none;
-  text-decoration-thickness: auto;
-  text-underline-offset: auto;
-  text-underline-position: from-font;
-  margin-bottom: 20px;
-  cursor: pointer;
-  height: 24px;
-  width: 153px;
-  border: none;
-  background-color: transparent;
-`;
-
 const NextBtn = styled.button`
   width: 100%;
   padding: 16px 20px;
   border: none;
   border-radius: 8px;
-  background: ${(props) =>
-    props.$isActive ? "var(--key_purple, #AA91E8)" : "#bebebe"};
+  background: var(--key_purple, #aa91e8);
   justify-content: center;
   align-items: center;
-  cursor: ${(props) => (props.$isActive ? "pointer" : "default")};
+  cursor: pointer;
   color: #fff;
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  cursor: pointer;
 
   &:hover {
-    background-color: ${(props) => (props.$isActive ? "#967bd9" : "#bebebe")};
+    background-color: #967bd9;
   }
 `;
