@@ -4,15 +4,19 @@ import { useNavigate } from "react-router-dom";
 
 import GlobalStyle from "../style/GlobalStyle";
 import BackHeader from "../components/BackHeader";
+import useDateStore from "../stores/DateStore"; // DateStore 가져오기
+import MyTodo from "../components/MyTodo";
+import FamilyTodo from "../components/FamilyTodo";
 
 const DayPage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("myTasks"); // 'myTasks' 또는 'familyTasks'
+  const { year, month, day, setYear, setMonth, setDay } = useDateStore();
 
   return (
     <>
       <GlobalStyle />
-      <BackHeader title="12월 13일" pageurl={"/month"} />
+      <BackHeader title={`${month}월 ${day}일`} pageurl={"/month"} />
       <Container>
         <TabContainer>
           <Tab
@@ -28,6 +32,13 @@ const DayPage = () => {
             식구들의 할 일{activeTab === "familyTasks" && <Underline />}
           </Tab>
         </TabContainer>
+        {activeTab === "myTasks" && (
+          <>
+            <MyTodo categoryName="청소" />
+            <MyTodo categoryName="빨래" />
+          </>
+        )}
+        {activeTab === "familyTasks" && <FamilyTodo />}
       </Container>
     </>
   );
@@ -48,6 +59,8 @@ const TabContainer = styled.div`
   display: flex;
   gap: 20px;
   margin-top: 10px;
+
+  margin-bottom: 9px;
 `;
 
 const Tab = styled.div`
