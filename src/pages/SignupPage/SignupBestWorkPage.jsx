@@ -67,7 +67,14 @@ const SignupBestWorkPage = () => {
             $isActive={selectedCategories.length > 0}
             onClick={() => {
               if (selectedCategories.length > 0) {
-                console.log("선택된 카테고리:", selectedCategories);
+                // 선택된 카테고리의 인덱스 기반으로 번호 생성
+                const houseworkTag = selectedCategories
+                  .map((category) => categories.indexOf(category) + 1)
+                  .join(", ");
+
+                const payload = { houseworkTag };
+
+                console.log("백엔드로 전달되는 데이터:", payload);
                 navigate("/signupkkaebicomment");
               }
             }}
