@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import GlobalStyle from "../../style/GlobalStyle";
 import SignupBackBtn from "../../images/SignupBackBtn.svg";
 import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
-import RedCImg from "../../images/character/피부미인.svg";
+import RedCImg from "../../images/character/피부미인.png";
 import YellowCImg from "../../images/character/머리숱부자.png";
 import BlackCImg from "../../images/character/핑크수집가.png";
 import GreenCImg from "../../images/character/고민해결사.png";
