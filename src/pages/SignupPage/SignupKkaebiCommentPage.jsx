@@ -12,8 +12,8 @@ const SignupKkaebiCommentPage = () => {
   // 3초 후 페이지 전환
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate("/signupbestwork");
-    }, 9000);
+      navigate("/homemain");
+    }, 3000);
 
     // 컴포넌트가 언마운트될 때 타이머를 정리
     return () => clearTimeout(timer);
