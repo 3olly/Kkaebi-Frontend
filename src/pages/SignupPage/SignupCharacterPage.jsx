@@ -1,13 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 import GlobalStyle from "../../style/GlobalStyle";
 import SignupBackBtn from "../../images/SignupBackBtn.svg";
 import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
+import RedCImg from "../../images/character/피부미인.svg";
+import YellowCImg from "../../images/character/머리숱부자.png";
+import BlackCImg from "../../images/character/핑크수집가.png";
+import GreenCImg from "../../images/character/고민해결사.png";
+import BlueCImg from "../../images/character/매듭의달인.png";
+
+const characters = [
+  { id: 1, src: RedCImg, label: "피부 미인" },
+  { id: 2, src: YellowCImg, label: "머리숱 부자" },
+  { id: 3, src: BlackCImg, label: "핑크 수집가" },
+  { id: 4, src: GreenCImg, label: "고민 해결사" },
+  { id: 5, src: BlueCImg, label: "매듭의 달인" },
+];
 
 const SignupNamePage = () => {
   const navigate = useNavigate();
+  const [selectedCharacter, setSelectedCharacter] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const startXRef = useRef(0);
+  const translateXRef = useRef(0);
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    startXRef.current = e.clientX;
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    translateXRef.current = e.clientX - startXRef.current;
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+
+    if (translateXRef.current > 50) {
+      // 왼쪽으로 드래그
+      setSelectedCharacter((prev) =>
+        prev === 0 ? characters.length - 1 : prev - 1
+      );
+    } else if (translateXRef.current < -50) {
+      // 오른쪽으로 드래그
+      setSelectedCharacter((prev) => (prev + 1) % characters.length);
+    }
+
+    translateXRef.current = 0; // 드래그 거리 초기화
+  };
 
   return (
     <>
@@ -23,9 +66,31 @@ const SignupNamePage = () => {
         <Top>
           <Kkaebi>
             <KkaebiProfile src={KkaebiProfileImg} alt="깨비 프로필 이미지" />
-            <Comment>캐릭터설정페이지.</Comment>
+            <Comment>캐릭터를 선택해주세요.</Comment>
           </Kkaebi>
-          <Input placeholder="ex) 깨비" />
+          <CarouselContainer
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onDragStart={(e) => e.preventDefault()} // 컨테이너 드래그 방지
+          >
+            <Character>
+              <CharacterImg
+                src={characters[selectedCharacter].src}
+                alt={characters[selectedCharacter].label}
+                onDragStart={(e) => e.preventDefault()} // 이미지 드래그 방지
+              />
+            </Character>
+          </CarouselContainer>
+
+          <IndicatorContainer>
+            {characters.map((_, index) => (
+              <Indicator
+                key={index}
+                isActive={index === selectedCharacter}
+              ></Indicator>
+            ))}
+          </IndicatorContainer>
         </Top>
         <Bottom>
           <NextBtn onClick={() => navigate("/signupcodeinput")}>다음</NextBtn>
@@ -80,7 +145,6 @@ const Kkaebi = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 30px */
-  margin-bottom: 20px;
 `;
 
 const KkaebiProfile = styled.img`
@@ -98,47 +162,50 @@ const Comment = styled.div`
   line-height: 150%; /* 30px */
 `;
 
-const Input = styled.input`
+const CarouselContainer = styled.div`
   display: flex;
-  width: 100%;
-  height: 46px;
-  padding: 20px;
   align-items: center;
-  border-radius: 8px;
-  border: 0.5px solid #cecece;
-  background: #fff;
-  color: #000;
-  font-family: Pretendard;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  box-sizing: border-box; /* 패딩 포함 너비 계산 */
-
-  &::placeholder {
-    color: #787878;
-    font-family: Pretendard;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
+  justify-content: center;
+  margin-top: 114.5px;
+  cursor: grab;
+  &:active {
+    cursor: grabbing;
   }
-
-  &:focus {
-    border: 0.5px solid #000; /* 포커스 시 검정색 테두리 */
-    outline: none; /* 기본 포커스 효과 제거 */
-  }
+  width: 100%;
+  height: 300px;
+  user-select: none; /* 텍스트 선택 방지 */
 `;
 
-const ErrorMessage = styled.div`
-  color: #f00;
-  font-family: Pretendard;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  margin-top: 12px;
-  margin-left: 20px;
+const Character = styled.div`
+  text-align: center;
+`;
+
+const CharacterImg = styled.img.attrs({
+  draggable: false, // 기본적으로 드래그를 막음
+})`
+  display: flex;
+  padding: 0px 4.035px 9.043px 5px;
+  flex-direction: column;
+  align-items: center;
+  gap: 37px;
+  align-self: stretch;
+
+  width: 201px;
+  height: 310px;
+`;
+
+const IndicatorContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 16px; /* 위쪽과 간격 추가 */
+  gap: 14px;
+`;
+
+const Indicator = styled.div`
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: ${(props) => (props.isActive ? "#AA91E8" : "#BEBEBE")};
 `;
 
 const Bottom = styled.div`
@@ -152,20 +219,18 @@ const NextBtn = styled.button`
   padding: 16px 20px;
   border: none;
   border-radius: 8px;
-  background: ${(props) =>
-    props.isActive ? "var(--key_purple, #AA91E8)" : "#bebebe"};
+  background: var(--key_purple, #aa91e8);
   justify-content: center;
   align-items: center;
-  cursor: ${(props) => (props.isActive ? "pointer" : "default")};
+  cursor: pointer;
   color: #fff;
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  cursor: pointer;
 
   &:hover {
-    background-color: ${(props) => (props.isActive ? "#967bd9" : "#bebebe")};
+    background-color: #967bd9;
   }
 `;
