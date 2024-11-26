@@ -3,7 +3,9 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 import GlobalStyle from "../../style/GlobalStyle";
-import SignupBackBtn from "../../images/SignupBackBtn.svg";
+
+import Header from "../../components/HomeHeader.jsx";
+
 import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
 
 const HomeMainPage = () => {
@@ -12,13 +14,7 @@ const HomeMainPage = () => {
   return (
     <>
       <GlobalStyle />
-      <Header>
-        <BackBtn
-          src={SignupBackBtn}
-          alt="뒤로가기"
-          onClick={() => navigate("/signupintro")}
-        />
-      </Header>
+      <Header title="홈페이지" />
       <Container>
         <Top>
           <Kkaebi>
@@ -35,23 +31,6 @@ const HomeMainPage = () => {
 };
 
 export default HomeMainPage;
-
-const Header = styled.div`
-  display: flex;
-  padding: 20px;
-  align-items: center;
-  align-self: stretch;
-  background-color: #fafafa;
-`;
-
-const BackBtn = styled.button`
-  width: 9px;
-  height: 18px;
-  border: none;
-  background: url(${SignupBackBtn}) no-repeat center;
-  background-size: contain;
-  cursor: pointer;
-`;
 
 const Container = styled.div`
   display: flex;
