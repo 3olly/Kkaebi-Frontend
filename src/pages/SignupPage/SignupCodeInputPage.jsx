@@ -66,7 +66,7 @@ const SignupCodeInputPage = () => {
             우리집 코드가 없나요?
           </Question>
           <NextBtn
-            isActive={isButtonActive}
+            $isActive={isButtonActive}
             onClick={() => isButtonActive && navigate("/signupcharacter")}
           >
             다음
@@ -208,10 +208,10 @@ const NextBtn = styled.button`
   border: none;
   border-radius: 8px;
   background: ${(props) =>
-    props.isActive ? "var(--key_purple, #AA91E8)" : "#bebebe"};
+    props.$isActive ? "var(--key_purple, #AA91E8)" : "#bebebe"};
   justify-content: center;
   align-items: center;
-  cursor: ${(props) => (props.isActive ? "pointer" : "default")};
+  cursor: ${(props) => (props.$isActive ? "pointer" : "default")};
   color: #fff;
   font-family: Pretendard;
   font-size: 16px;
@@ -221,6 +221,6 @@ const NextBtn = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: ${(props) => (props.isActive ? "#967bd9" : "#bebebe")};
+    background-color: ${(props) => (props.$isActive ? "#967bd9" : "#bebebe")};
   }
 `;

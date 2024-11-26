@@ -6,12 +6,28 @@ import GlobalStyle from "../../style/GlobalStyle";
 import SignupBackBtn from "../../images/SignupBackBtn.svg";
 import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
 
-const SignupSetHomePage = () => {
-  const navigate = useNavigate();
-  const [inputValue, setInputValue] = useState("");
+const categories = [
+  "빨래",
+  "설거지",
+  "청소",
+  "생필품 구매",
+  "쓰레기 버리기",
+  "분리수거",
+  "요리",
+  "식물 관리",
+  "반려동물 관리",
+];
 
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
+const SignupBestWorkPage = () => {
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const navigate = useNavigate();
+
+  const toggleCategory = (category) => {
+    if (selectedCategories.includes(category)) {
+      setSelectedCategories((prev) => prev.filter((item) => item !== category));
+    } else {
+      setSelectedCategories((prev) => [...prev, category]);
+    }
   };
 
   return (
@@ -21,34 +37,42 @@ const SignupSetHomePage = () => {
         <BackBtn
           src={SignupBackBtn}
           alt="뒤로가기"
-          onClick={() => navigate("/signupcodeinput")}
+          onClick={() => navigate("/signupcharacter")}
         />
       </Header>
       <Container>
         <Top>
           <Kkaebi>
             <KkaebiProfile src={KkaebiProfileImg} alt="깨비 프로필 이미지" />
-            <Comment>우리 집 이름을 알려주세요.</Comment>
+            <Comment>
+              거의 다 왔어요!
+              <br />
+              자신있는 집안일을 선택해주세요.
+            </Comment>
           </Kkaebi>
-          <InputBox>
-            <Input
-              placeholder="ex) 깨비"
-              value={inputValue}
-              onChange={handleInputChange}
-            />
-            <House>하우스</House>
-          </InputBox>
+          <CategoryContainer>
+            {categories.map((category) => (
+              <CategoryButton
+                key={category}
+                $isSelected={selectedCategories.includes(category)}
+                onClick={() => toggleCategory(category)}
+              >
+                {category}
+              </CategoryButton>
+            ))}
+          </CategoryContainer>
         </Top>
         <Bottom>
           <NextBtn
-            $isActive={inputValue.trim() !== ""}
+            $isActive={selectedCategories.length > 0}
             onClick={() => {
-              if (inputValue.trim() !== "") {
-                navigate("/signupgeneratecode");
+              if (selectedCategories.length > 0) {
+                console.log("선택된 카테고리:", selectedCategories);
+                navigate("/signupcodeinput");
               }
             }}
           >
-            다음
+            시작하기
           </NextBtn>
         </Bottom>
       </Container>
@@ -56,7 +80,7 @@ const SignupSetHomePage = () => {
   );
 };
 
-export default SignupSetHomePage;
+export default SignupBestWorkPage;
 
 const Header = styled.div`
   display: flex;
@@ -81,8 +105,8 @@ const Container = styled.div`
   justify-content: space-between;
   padding: 0 20px;
   background-color: #fafafa;
-  height: calc(100vh - 132px); /* Header 패딩과 NextBtn 마진 포함 */
-  overflow: hidden; /* 스크롤 숨기기 */
+  height: calc(100vh - 132px);
+  overflow: hidden;
   padding-bottom: 74px;
 `;
 
@@ -100,7 +124,7 @@ const Kkaebi = styled.div`
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
-  line-height: 150%; /* 30px */
+  line-height: 150%;
   margin-bottom: 20px;
 `;
 
@@ -116,55 +140,27 @@ const Comment = styled.div`
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
-  line-height: 150%; /* 30px */
+  line-height: 150%;
 `;
 
-const InputBox = styled.div`
+const CategoryContainer = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
+  flex-wrap: wrap;
+  gap: 12px;
 `;
 
-const Input = styled.input`
-  flex: 1;
-  height: 46px;
-  padding: 10px 16px;
+const CategoryButton = styled.button`
+  padding: 20px 20px;
   border-radius: 8px;
-  border: 0.5px solid #cecece;
-  background: #fff;
-  color: #000;
+  border: 0.5px solid ${(props) => (props.$isSelected ? "#AA91E8" : "#cecece")};
+  background-color: ${(props) => (props.$isSelected ? "#E4D9FF" : "#FFF")};
+  color: ${(props) => (props.$isSelected ? "#000" : "#787878")};
   font-family: Pretendard;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  box-sizing: border-box;
-
-  &::placeholder {
-    color: #787878;
-    font-family: Pretendard;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-  }
-
-  &:focus {
-    border: 0.5px solid #000;
-    outline: none;
-  }
-`;
-
-const House = styled.div`
-  margin-left: 16px;
-  color: #000;
-  font-family: Pretendard;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  white-space: nowrap;
+  cursor: pointer;
 `;
 
 const Bottom = styled.div`
@@ -182,13 +178,13 @@ const NextBtn = styled.button`
     props.$isActive ? "var(--key_purple, #AA91E8)" : "#bebebe"};
   justify-content: center;
   align-items: center;
-  cursor: ${(props) => (props.$isActive ? "pointer" : "not-allowed")};
   color: #fff;
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+  cursor: ${(props) => (props.$isActive ? "pointer" : "default")};
 
   &:hover {
     background-color: ${(props) => (props.$isActive ? "#967bd9" : "#bebebe")};
