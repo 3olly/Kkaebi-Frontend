@@ -26,6 +26,13 @@
       "today_completion_rate": "100%",
       "weekly_completion_rate": "100%",
       "level": "Lv7. 빛"
+    },
+    {
+      "nickname": "1234",
+      "character": 1,
+      "today_completion_rate": "none",
+      "weekly_completion_rate": "0%",
+      "level": "Lv1. 미세먼지"
     }
   ]
 }

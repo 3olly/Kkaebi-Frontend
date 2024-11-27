@@ -30,7 +30,7 @@ const HomeMainPage = () => {
                 viewBox="0 0 9 17"
                 fill="none"
               >
-                <path d="M1 1L7 8.5L1 16" stroke="#787878" stroke-width="1.7" />
+                <path d="M1 1L7 8.5L1 16" stroke="#787878" strokeWidth="1.7" />
               </svg>
             </Arrow>
           </StatisticsBtn>

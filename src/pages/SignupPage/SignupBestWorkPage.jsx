@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import GlobalStyle from "../../style/GlobalStyle";
 import SignupBackBtn from "../../images/SignupBackBtn.svg";
 import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
+import CategorySelector from "../../components/CategorySelector"; // 새 컴포넌트 경로
 
 const categories = [
   "빨래",
@@ -50,24 +51,17 @@ const SignupBestWorkPage = () => {
               자신있는 집안일을 선택해주세요.
             </Comment>
           </Kkaebi>
-          <CategoryContainer>
-            {categories.map((category) => (
-              <CategoryButton
-                key={category}
-                $isSelected={selectedCategories.includes(category)}
-                onClick={() => toggleCategory(category)}
-              >
-                {category}
-              </CategoryButton>
-            ))}
-          </CategoryContainer>
+          <CategorySelector
+            categories={categories}
+            selectedCategories={selectedCategories}
+            onToggle={toggleCategory}
+          />
         </Top>
         <Bottom>
           <NextBtn
             $isActive={selectedCategories.length > 0}
             onClick={() => {
               if (selectedCategories.length > 0) {
-                // 선택된 카테고리의 인덱스 기반으로 번호 생성
                 const houseworkTag = selectedCategories
                   .map((category) => categories.indexOf(category) + 1)
                   .join(", ");
@@ -148,26 +142,6 @@ const Comment = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 150%;
-`;
-
-const CategoryContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-`;
-
-const CategoryButton = styled.button`
-  padding: 20px 20px;
-  border-radius: 8px;
-  border: 0.5px solid ${(props) => (props.$isSelected ? "#AA91E8" : "#cecece")};
-  background-color: ${(props) => (props.$isSelected ? "#E4D9FF" : "#FFF")};
-  color: ${(props) => (props.$isSelected ? "#000" : "#787878")};
-  font-family: Pretendard;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  cursor: pointer;
 `;
 
 const Bottom = styled.div`
