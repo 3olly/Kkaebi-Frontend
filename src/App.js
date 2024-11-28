@@ -20,6 +20,7 @@ import HomeStatisticsPage from "./pages/HomePage/HomeStatisticsPage.jsx";
 import MyPage from "./pages/MyPage.jsx";
 
 import DayPage from "./pages/DayPage.jsx";
+import MakeTodoPage from "./pages/MakeTodoPage.jsx";
 
 function App() {
   function setScreenSize() {
@@ -58,6 +59,7 @@ function App() {
           {/* 캘린더 */}
           <Route path="/month" element={<CalendarPage />} />
           <Route path="/day" element={<DayPage />} />
+          <Route path="/maketodo" element={<MakeTodoPage />} />
 
           {/* 마이페이지 */}
           <Route path="/mypage" element={<MyPage />} />
