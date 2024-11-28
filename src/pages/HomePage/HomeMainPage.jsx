@@ -51,7 +51,7 @@ const HomeMainPage = () => {
 
       <Top>
         <SemiHeader>
-          <StatisticsBtn onClick={() => navigate("/signupkkaebicomment")}>
+          <StatisticsBtn onClick={() => navigate("/homestatistics")}>
             <BtnComment>
               <TodayComment>오늘 럭키비키 하우스의 집안일 현황은?</TodayComment>
               <Check>통계 확인하기</Check>
