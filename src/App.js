@@ -16,6 +16,7 @@ import SignupBestWorkPage from "./pages/SignupPage/SignupBestWorkPage.jsx";
 import SignupKkaebiCommentPage from "./pages/SignupPage/SignupKkaebiCommentPage.jsx";
 
 import HomeMainPage from "./pages/HomePage/HomeMainPage.jsx";
+import HomeStatisticsPage from "./pages/HomePage/HomeStatisticsPage.jsx";
 import MyPage from "./pages/MyPage.jsx";
 
 import DayPage from "./pages/DayPage.jsx";
@@ -53,6 +54,7 @@ function App() {
 
           {/* 홈페이지 */}
           <Route path="/homemain" element={<HomeMainPage />} />
+          <Route path="/homestatistics" element={<HomeStatisticsPage />} />
 
           {/* 캘린더 */}
           <Route path="/month" element={<CalendarPage />} />
