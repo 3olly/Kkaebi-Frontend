@@ -9,13 +9,14 @@ import Header from "../components/Header";
 import LeftArrow from "../images/LeftArrow.svg";
 import RightArrow from "../images/RightArrow.svg";
 import useDateStore from "../stores/DateStore"; // DateStore 가져오기
+import MyTodo from "../components/MyTodo";
 
 const CalendarPage = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const navigate = useNavigate();
 
   // Zustand 상태와 액션 가져오기
-  const { year, month, setYear, setMonth, setDay } = useDateStore();
+  const { year, month, day, setYear, setMonth, setDay } = useDateStore();
 
   const handlePrevMonth = () => {
     const newDate = new Date(
@@ -39,7 +40,7 @@ const CalendarPage = () => {
 
   const handleDateClick = async (selectedDay) => {
     if (selectedDay) {
-      setDay(selectedDay);
+      setDay(selectedDay); // 클릭한 날짜를 Zustand에 업데이트
       const dateData = { year, month, day: selectedDay };
 
       // 백엔드로 데이터 전송
@@ -52,7 +53,8 @@ const CalendarPage = () => {
         console.error("Error sending data:", error);
       }
 
-      navigate(`/day?date=${year}-${month}-${selectedDay}`);
+      // navigate 호출 전에 상태 업데이트가 적용되도록 selectedDay 전달
+      navigate(`/day?year=${year}&month=${month}&date=${selectedDay}`);
     }
   };
 
@@ -141,6 +143,10 @@ const CalendarPage = () => {
         </HeaderContainer>
         {renderDays()}
         {renderDates()}
+        <MyTodoContainer>
+          <Name>{`${month}월 ${day}일`}</Name>
+          <MyTodo />
+        </MyTodoContainer>
       </Container>
     </>
   );
@@ -156,6 +162,18 @@ const Container = styled.div`
   height: calc(100vh - 132px);
   overflow-y: auto;
   padding-bottom: 74px;
+`;
+
+const MyTodoContainer = styled.div`
+  display: flex;
+  padding: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  flex-shrink: 0;
+  align-self: stretch;
+  background: #fff;
+  margin-top: 20px;
 `;
 
 const HeaderContainer = styled.div`
@@ -228,4 +246,13 @@ const Line = styled.div`
   height: 1px;
   background: #e1e1e1;
   margin: 10px 0;
+`;
+
+const Name = styled.div`
+  color: #000;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.5px;
 `;
