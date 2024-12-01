@@ -26,6 +26,7 @@ const SignupNamePage = () => {
   const startXRef = useRef(0);
   const translateXRef = useRef(0);
 
+  // Mouse Events
   const handleMouseDown = (e) => {
     setIsDragging(true);
     startXRef.current = e.clientX;
@@ -38,18 +39,37 @@ const SignupNamePage = () => {
 
   const handleMouseUp = () => {
     setIsDragging(false);
+    handleDragEnd();
+  };
 
+  // Touch Events
+  const handleTouchStart = (e) => {
+    setIsDragging(true);
+    startXRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging) return;
+    translateXRef.current = e.touches[0].clientX - startXRef.current;
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+    handleDragEnd();
+  };
+
+  // Shared Logic for Drag End
+  const handleDragEnd = () => {
     if (translateXRef.current > 50) {
-      // 왼쪽으로 드래그
+      // Swipe left
       setSelectedCharacter((prev) =>
         prev === 0 ? characters.length - 1 : prev - 1
       );
     } else if (translateXRef.current < -50) {
-      // 오른쪽으로 드래그
+      // Swipe right
       setSelectedCharacter((prev) => (prev + 1) % characters.length);
     }
-
-    translateXRef.current = 0; // 드래그 거리 초기화
+    translateXRef.current = 0; // Reset drag distance
   };
 
   return (
@@ -72,13 +92,16 @@ const SignupNamePage = () => {
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
-            onDragStart={(e) => e.preventDefault()} // 컨테이너 드래그 방지
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onDragStart={(e) => e.preventDefault()} // Prevent container drag
           >
             <Character>
               <CharacterImg
                 src={characters[selectedCharacter].src}
                 alt={characters[selectedCharacter].label}
-                onDragStart={(e) => e.preventDefault()} // 이미지 드래그 방지
+                onDragStart={(e) => e.preventDefault()} // Prevent image drag
               />
             </Character>
           </CarouselContainer>
