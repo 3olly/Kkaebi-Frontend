@@ -36,7 +36,7 @@ function App() {
       <Router>
         <Routes>
           {/* 로그인 및 회원가입 */}
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<LoginPage />} />
           <Route path="/signupintro" element={<SignupIntroPage />} />
           <Route path="/signupname" element={<SignupNamePage />} />
           <Route path="/signupcodeinput" element={<SignupCodeInputPage />} />
