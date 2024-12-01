@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 import GlobalStyle from "../../style/GlobalStyle";
 import LoginKkaebi from "../../images/LoginKkaebi.svg";
 
 const LoginPage = () => {
   const [adjustedMargin, setAdjustedMargin] = useState(85);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const totalHeight = document.body.scrollHeight; // 콘텐츠의 총 높이
@@ -32,7 +34,7 @@ const LoginPage = () => {
           </Bottom>
         </TopSection>
         <LoginButtons adjustedMargin={adjustedMargin}>
-          <NaverLoginButton>
+          <NaverLoginButton onClick={() => navigate("/signupintro")}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
