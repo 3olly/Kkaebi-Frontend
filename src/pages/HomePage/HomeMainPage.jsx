@@ -37,7 +37,7 @@ const HomeMainPage = () => {
   }, []);
 
   if (!mockData || !familyData) {
-    return <div>Loading...</div>; // 데이터 로드 전 로딩 상태
+    return <div></div>; // 데이터 로드 전 로딩 상태
   }
 
   const { house, nickname, userCharacter, tasks, selected_tags } = mockData;
