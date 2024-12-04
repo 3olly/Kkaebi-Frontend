@@ -8,6 +8,10 @@ import Notice from "../images/Notice.svg";
 import Menu from "../images/Menu.svg";
 import X from "../images/X.svg";
 
+import HomeIcon from "../images/menu/Home.svg";
+import CalendarIcon from "../images/menu/Calendar.svg";
+import MyPageIcon from "../images/menu/MyPage.svg";
+
 const Header = ({ title }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -59,9 +63,35 @@ const Header = ({ title }) => {
                 </ModalHeader>
                 <MenuName>메뉴</MenuName>
                 <MenuList>
-                  <li onClick={() => goToPage("/homemain")}>홈</li>
-                  <li onClick={() => goToPage("/month")}>캘린더</li>
-                  <li onClick={() => goToPage("/mypage")}>마이페이지</li>
+                  <li onClick={() => goToPage("/homemain")}>
+                    <StyledHomeIcon src={HomeIcon} alt="홈아이콘" />홈
+                  </li>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="233"
+                    height="2"
+                    viewBox="0 0 233 2"
+                    fill="none"
+                  >
+                    <path d="M0 0.981445H233" stroke="#F4F4F4" />
+                  </svg>
+                  <li onClick={() => goToPage("/month")}>
+                    <StyledCalendarIcon src={CalendarIcon} alt="캘린더아이콘" />
+                    캘린더
+                  </li>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="233"
+                    height="2"
+                    viewBox="0 0 233 2"
+                    fill="none"
+                  >
+                    <path d="M0 0.981445H233" stroke="#F4F4F4" />
+                  </svg>
+                  <li onClick={() => goToPage("/mypage")}>
+                    <StyledMyPageIcon src={MyPageIcon} alt="마이페이지아이콘" />
+                    마이페이지
+                  </li>
                 </MenuList>
               </ModalContainer>
             </Modal>
@@ -73,6 +103,16 @@ const Header = ({ title }) => {
 };
 
 export default Header;
+
+const StyledHomeIcon = styled.img`
+  margin-right: 17px;
+`;
+const StyledCalendarIcon = styled.img`
+  margin-right: 17px;
+`;
+const StyledMyPageIcon = styled.img`
+  margin-right: 17px;
+`;
 
 const GlobalStyle = createGlobalStyle`
 
@@ -184,7 +224,9 @@ const MenuList = styled.ul`
   list-style-type: none;
 
   li {
-    margin-bottom: 21px;
+    display: flex;
+    align-items: center;
+
     color: var(--bk01, #000);
     font-family: Pretendard;
     font-size: 20px;
@@ -193,5 +235,9 @@ const MenuList = styled.ul`
     line-height: 20px;
     letter-spacing: -0.5px;
     cursor: pointer;
+  }
+
+  svg {
+    margin: 15px 0;
   }
 `;
