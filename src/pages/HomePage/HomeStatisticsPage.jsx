@@ -249,7 +249,9 @@ export default HomeStatisticsPage;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 20px 74px 20px;
+  padding: 0 20px;
+  justify-content: space-around;
+  min-height: calc(100vh - 69px);
   background-color: #fafafa;
 `;
 
