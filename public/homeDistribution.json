@@ -1,21 +1,23 @@
 {
-  "house": "Ra Home",
-  "total_house_tasks": 9,
+  "house": "rara",
+  "total_house_tasks": 5,
+  "total_members": 3,
+  "house_completion_rate": "80%",
   "distribution": [
     {
-      "nickname": "rar",
-      "total_tasks": 5,
-      "distribution_percentage": "55%"
+      "nickname": "1234",
+      "total_tasks": 0,
+      "distribution_percentage": "none"
     },
     {
-      "nickname": "asdasd",
+      "nickname": "콜라",
       "total_tasks": 2,
-      "distribution_percentage": "22%"
+      "distribution_percentage": "none"
     },
     {
-      "nickname": "yongja",
-      "total_tasks": 2,
-      "distribution_percentage": "22%"
+      "nickname": "사이다",
+      "total_tasks": 3,
+      "distribution_percentage": "none"
     }
   ]
 }

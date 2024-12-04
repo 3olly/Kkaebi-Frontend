@@ -1,38 +1,152 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 import Header from "../../components/BackHeader.jsx";
 
 import GlobalStyle from "../../style/GlobalStyle.js";
-import SignupBackBtn from "../../images/SignupBackBtn.svg";
 import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
 
 const HomeStatisticsPage = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [error, setError] = useState("");
-  const [isButtonActive, setIsButtonActive] = useState(false);
+  const [data, setData] = useState(null);
 
-  const handleInputChange = (e) => {
-    const inputValue = e.target.value;
-    if (inputValue.length > 8) {
-      setError("이름은 최대 8글자로 작성해주세요.");
-      setIsButtonActive(false); // 비활성화 상태 유지
-    } else if (inputValue.length === 0) {
-      setError("");
-      setIsButtonActive(false); // 값이 없으면 비활성화
-    } else {
-      setError("");
-      setIsButtonActive(true); // 8글자 이하 값이 있으면 활성화
+  useEffect(() => {
+    fetch("/homeDistribution.json")
+      .then((response) => response.json())
+      .then((json) => {
+        setData({
+          ...json,
+          distribution: json.distribution || [], // 분배 배열 기본값 설정
+          house_completion_rate: json.house_completion_rate || "0%", // 완료율 기본값 설정
+        });
+      })
+      .catch((error) => console.error("Error fetching mockdata:", error));
+  }, []);
+
+  if (!data) {
+    return <div></div>;
+  }
+
+  const calculateSlices = () => {
+    let endAngle = 360;
+
+    const validMembers = data.distribution
+      .filter((member) => member.total_tasks > 0)
+      .sort((a, b) => b.total_tasks - a.total_tasks);
+
+    if (validMembers.length === 1) {
+      const singleMember = validMembers[0];
+      return [
+        {
+          startAngle: 0,
+          endAngle: 360,
+          color: "rgba(170, 145, 232, 1)",
+          nickname: singleMember.nickname || "Unknown",
+        },
+      ];
     }
-    setName(inputValue);
+
+    const totalTasks = validMembers.reduce(
+      (sum, member) => sum + member.total_tasks,
+      0
+    );
+
+    const totalMembers = validMembers.length;
+
+    return validMembers.map((member, index) => {
+      const percentage = member.total_tasks / totalTasks;
+      const startAngle = endAngle - percentage * 360;
+
+      const opacity = (totalMembers - index) / totalMembers;
+
+      const slice = {
+        startAngle,
+        endAngle,
+        color: `rgba(170, 145, 232, ${opacity.toFixed(2)})`,
+        nickname: member.nickname || "Unknown",
+      };
+      endAngle = startAngle;
+      return slice;
+    });
   };
 
-  const handleInputBlur = () => {
-    if (name.length > 8 || name.length === 0) {
-      setIsButtonActive(false);
+  const slices = calculateSlices();
+
+  const completionRate = parseInt(data.house_completion_rate, 10);
+
+  const completionSlices =
+    completionRate === 100
+      ? [
+          {
+            startAngle: 0,
+            endAngle: 360,
+            color: "#AA91E8",
+            label: "완료",
+          },
+        ]
+      : completionRate === 0
+      ? [
+          {
+            startAngle: 0,
+            endAngle: 360,
+            color: "#D2D2D2",
+            label: "미완료",
+          },
+        ]
+      : [
+          {
+            startAngle: 0,
+            endAngle: ((100 - completionRate) / 100) * 360,
+            color: "#D2D2D2",
+            label: "미완료",
+          },
+          {
+            startAngle: ((100 - completionRate) / 100) * 360,
+            endAngle: 360,
+            color: "#AA91E8",
+            label: "완료",
+          },
+        ];
+
+  const describeArc = (x, y, radius, startAngle, endAngle) => {
+    if (startAngle === endAngle) {
+      return `
+              M ${x - radius}, ${y} 
+              a ${radius},${radius} 0 1,0 ${radius * 2},0 
+              a ${radius},${radius} 0 1,0 ${-radius * 2},0
+            `;
     }
+
+    const start = polarToCartesian(x, y, radius, endAngle);
+    const end = polarToCartesian(x, y, radius, startAngle);
+    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+
+    return [
+      "M",
+      start.x,
+      start.y,
+      "A",
+      radius,
+      radius,
+      0,
+      largeArcFlag,
+      0,
+      end.x,
+      end.y,
+      "L",
+      x,
+      y,
+      "Z",
+    ].join(" ");
+  };
+
+  const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => {
+    const angleInRadians = (angleInDegrees - 90) * (Math.PI / 180.0);
+    return {
+      x: centerX + radius * Math.cos(angleInRadians),
+      y: centerY + radius * Math.sin(angleInRadians),
+    };
   };
 
   return (
@@ -40,12 +154,91 @@ const HomeStatisticsPage = () => {
       <GlobalStyle />
       <Header title="집안일 통계" pageurl={"/homemain"} />
       <Container>
-        <Top>
+        <Section>
           <Kkaebi>
             <KkaebiProfile src={KkaebiProfileImg} alt="깨비 프로필 이미지" />
-            <Comment>아직 만드는 중!!!!!!!!</Comment>
+            <Comment1>이번주</Comment1>
+            <Comment2> 집안일 분배 </Comment2>
+            <Comment1> 현황이에요.</Comment1>
           </Kkaebi>
-        </Top>
+          <PieChart>
+            <svg width="200" height="200" viewBox="0 0 200 200">
+              {slices.length === 1 ? (
+                // 유효한 멤버가 한 명일 경우 전체 원을 해당 색상으로 채움
+                <circle
+                  cx="100" // 중심점 x 좌표
+                  cy="100" // 중심점 y 좌표
+                  r="100" // 반지름
+                  fill={slices[0].color} // 단일 멤버의 색상
+                />
+              ) : (
+                // 여러 멤버가 있을 경우 기존의 describeArc를 사용
+                slices.map((slice, index) => (
+                  <path
+                    key={index}
+                    d={describeArc(
+                      100, // 중심점 x 좌표
+                      100, // 중심점 y 좌표
+                      100, // 반지름
+                      slice.startAngle,
+                      slice.endAngle
+                    )}
+                    fill={slice.color}
+                  />
+                ))
+              )}
+            </svg>
+          </PieChart>
+
+          <Legend>
+            {slices.map((slice, index) => (
+              <LegendItem key={index}>
+                <ColorBox style={{ backgroundColor: slice.color }} />
+                <Nickname>{slice.nickname}</Nickname>
+              </LegendItem>
+            ))}
+          </Legend>
+        </Section>
+        <Section>
+          <Kkaebi>
+            <KkaebiProfile src={KkaebiProfileImg} alt="깨비 프로필 이미지" />
+            <Comment1>이번주</Comment1>
+            <Comment2> 집안일 완료 </Comment2>
+            <Comment1> 현황이에요.</Comment1>
+          </Kkaebi>
+          <PieChart>
+            <svg width="200" height="200" viewBox="0 0 200 200">
+              {completionRate === 100 ? (
+                <circle cx="100" cy="100" r="100" fill="#AA91E8" />
+              ) : completionRate === 0 ? (
+                <circle cx="100" cy="100" r="100" fill="#D2D2D2" />
+              ) : (
+                completionSlices.map((slice, index) => (
+                  <path
+                    key={index}
+                    d={describeArc(
+                      100, // 중심점 x 좌표
+                      100, // 중심점 y 좌표
+                      100, // 반지름
+                      slice.startAngle,
+                      slice.endAngle
+                    )}
+                    fill={slice.color}
+                  />
+                ))
+              )}
+            </svg>
+          </PieChart>
+
+          <Legend>
+            {[...completionSlices].reverse().map((slice, index) => (
+              <LegendItem key={index}>
+                <ColorBox style={{ backgroundColor: slice.color }} />
+                <Nickname>{slice.label}</Nickname>
+              </LegendItem>
+            ))}
+          </Legend>
+        </Section>
       </Container>
     </>
   );
@@ -56,17 +249,12 @@ export default HomeStatisticsPage;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 20px 74px 20px;
   background-color: #fafafa;
-  height: calc(100vh - 132px); /* Header 패딩과 NextBtn 마진 포함 */
-  overflow: hidden; /* 스크롤 숨기기 */
-  padding-bottom: 74px;
 `;
 
-const Top = styled.div`
-  display: flex;
-  flex-direction: column;
+const Section = styled.div`
+  margin-bottom: 30px;
 `;
 
 const Kkaebi = styled.div`
@@ -78,8 +266,8 @@ const Kkaebi = styled.div`
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
-  line-height: 150%; /* 30px */
-  margin-bottom: 20px;
+  line-height: 150%;
+  margin-bottom: 16px;
 `;
 
 const KkaebiProfile = styled.img`
@@ -88,83 +276,63 @@ const KkaebiProfile = styled.img`
   margin-right: 16px;
 `;
 
-const Comment = styled.div`
+const Comment1 = styled.div`
   color: #000;
   font-family: Pretendard;
-  font-size: 20px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  line-height: 150%; /* 30px */
+  line-height: 150%;
 `;
 
-const Input = styled.input`
+const Comment2 = styled.div`
+  color: var(--key_purple, #aa91e8);
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+
+  white-space: pre-wrap;
+`;
+
+const PieChart = styled.div`
   display: flex;
-  width: 100%;
-  height: 46px;
-  padding: 20px;
+  justify-content: center;
   align-items: center;
-  border-radius: 8px;
-  border: 0.5px solid #cecece;
-  background: #fff;
+
+  height: 200px;
+`;
+
+const Legend = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 16.5px;
+  flex-wrap: wrap;
+`;
+
+const LegendItem = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: 12px;
+
+  &:last-child {
+    margin-right: 0; /* 마지막 아이템의 margin-right 제거 */
+  }
+`;
+
+const ColorBox = styled.div`
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  margin-right: 12px;
+`;
+
+const Nickname = styled.div`
   color: #000;
   font-family: Pretendard;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  box-sizing: border-box; /* 패딩 포함 너비 계산 */
-
-  &::placeholder {
-    color: #787878;
-    font-family: Pretendard;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-  }
-
-  &:focus {
-    border: 0.5px solid #000; /* 포커스 시 검정색 테두리 */
-    outline: none; /* 기본 포커스 효과 제거 */
-  }
-`;
-
-const ErrorMessage = styled.div`
-  color: #f00;
-  font-family: Pretendard;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  margin-top: 12px;
-  margin-left: 20px;
-`;
-
-const Bottom = styled.div`
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-`;
-
-const NextBtn = styled.button`
-  width: 100%;
-  padding: 16px 20px;
-  border: none;
-  border-radius: 8px;
-  background: ${(props) =>
-    props.$isActive ? "var(--key_purple, #AA91E8)" : "#bebebe"};
-  justify-content: center;
-  align-items: center;
-  cursor: ${(props) => (props.$isActive ? "pointer" : "default")};
-  color: #fff;
-  font-family: Pretendard;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${(props) => (props.$isActive ? "#967bd9" : "#bebebe")};
-  }
 `;
