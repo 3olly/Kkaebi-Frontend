@@ -317,6 +317,7 @@ const LegendItem = styled.div`
   display: flex;
   align-items: center;
   margin-right: 12px;
+  margin-bottom: 12px;
 
   &:last-child {
     margin-right: 0; /* 마지막 아이템의 margin-right 제거 */
