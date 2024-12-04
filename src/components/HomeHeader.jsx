@@ -26,10 +26,11 @@ const HomeHeader = ({ title }) => {
   };
 
   const closeModal = () => {
-    setIsClosing(true);
+    setIsClosing(true); // 닫힘 상태로 설정
     setTimeout(() => {
-      setModalOpen(false);
-    }, 300);
+      setIsClosing(false); // 닫힘 상태 초기화
+      setModalOpen(false); // 모달을 DOM에서 제거
+    }, 300); // 애니메이션 지속 시간 (0.3초)
   };
 
   const goToPage = (url) => {
@@ -200,8 +201,9 @@ const Modal = styled.div`
   height: calc(var(--vh, 1vh) * 100);
   margin: 0 auto;
   background-color: white;
-  animation: ${({ isClosing }) => (isClosing ? "slideOut" : "slideIn")} 0.3s
+  animation: ${({ $isClosing }) => ($isClosing ? "slideOut" : "slideIn")} 0.3s
     ease-in-out forwards;
+
   clip-path: ${({ isClosing }) =>
     isClosing ? "inset(0% 0% 0% 100%)" : "inset(0% 0% 0% 0%)"};
   z-index: 10;
