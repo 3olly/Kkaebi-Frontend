@@ -124,6 +124,17 @@ const InputBox = styled.div`
   flex-direction: row;
   align-items: center;
   width: 100%;
+  box-sizing: border-box;
+
+  @media (max-width: 320px) {
+    /* 가로 길이가 400px 이하일 때 */
+    width: calc(100% - 40px); /* padding 20px을 양쪽에서 제외한 너비 */
+  }
+
+  @media (max-width: 300px) {
+    /* 더 작은 화면에서도 추가 조정 */
+    width: calc(100% - 60px); /* 추가적인 여백 확보 */
+  }
 `;
 
 const Input = styled.input`
