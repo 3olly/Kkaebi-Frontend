@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import instance from "axios";
@@ -8,15 +8,12 @@ import Header from "../components/Header";
 
 import LeftArrow from "../images/LeftArrow.svg";
 import RightArrow from "../images/RightArrow.svg";
-import useDateStore from "../stores/DateStore"; // DateStore 가져오기
 import MyTodo from "../components/MyTodo";
 
 const CalendarPage = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const navigate = useNavigate();
-
-  // Zustand 상태와 액션 가져오기
-  const { year, month, day, setYear, setMonth, setDay } = useDateStore();
+  const today = new Date();
 
   const handlePrevMonth = () => {
     const newDate = new Date(
@@ -24,8 +21,6 @@ const CalendarPage = () => {
       currentDate.getMonth() - 1
     );
     setCurrentDate(newDate);
-    setYear(newDate.getFullYear());
-    setMonth(newDate.getMonth() + 1);
   };
 
   const handleNextMonth = () => {
@@ -34,26 +29,14 @@ const CalendarPage = () => {
       currentDate.getMonth() + 1
     );
     setCurrentDate(newDate);
-    setYear(newDate.getFullYear());
-    setMonth(newDate.getMonth() + 1);
   };
 
   const handleDateClick = async (selectedDay) => {
     if (selectedDay) {
-      setDay(selectedDay); // 클릭한 날짜를 Zustand에 업데이트
-      const dateData = { year, month, day: selectedDay };
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth() + 1;
 
-      // 백엔드로 데이터 전송
-      try {
-        const response = await instance.get(
-          `/calendar/housework/my/${year}/${month}/`
-        );
-        console.log("Data sent successfully:", response.data);
-      } catch (error) {
-        console.error("Error sending data:", error);
-      }
-
-      // navigate 호출 전에 상태 업데이트가 적용되도록 selectedDay 전달
+      // 날짜를 쿼리스트링으로 navigate
       navigate(`/day?year=${year}&month=${month}&date=${selectedDay}`);
     }
   };
@@ -80,21 +63,20 @@ const CalendarPage = () => {
     // 이전 월의 마지막 날짜 계산
     const prevMonthLastDate = new Date(year, month, 0).getDate();
     for (let i = firstDay - 1; i >= 0; i--) {
-      dates.push({ date: prevMonthLastDate - i, type: "prev" }); // 이전 달
+      dates.push({ date: prevMonthLastDate - i, type: "prev" });
     }
 
     // 현재 월의 날짜 추가
     for (let i = 1; i <= lastDate; i++) {
-      dates.push({ date: i, type: "current" }); // 현재 달
+      dates.push({ date: i, type: "current" });
     }
 
     // 다음 달의 날짜 추가
     const remainingDays = (7 - (dates.length % 7)) % 7;
     for (let i = 1; i <= remainingDays; i++) {
-      dates.push({ date: i, type: "next" }); // 다음 달
+      dates.push({ date: i, type: "next" });
     }
 
-    // 날짜 배열을 주 단위로 나눔
     const rows = [];
     for (let i = 0; i < dates.length; i += 7) {
       rows.push(dates.slice(i, i + 7));
@@ -103,23 +85,19 @@ const CalendarPage = () => {
     return (
       <DatesContainer>
         {rows.map((week, rowIndex) => (
-          <React.Fragment key={rowIndex}>
-            <Week isLastWeek={rowIndex === rows.length - 1}>
-              {week.map((dateObj, colIndex) => (
-                <DateBox
-                  key={colIndex}
-                  type={dateObj.type}
-                  onClick={() =>
-                    dateObj.type === "current" &&
-                    navigate(`/day?date=${year}-${month + 1}-${dateObj.date}`)
-                  }
-                >
-                  {dateObj.date}
-                </DateBox>
-              ))}
-            </Week>
-            {rowIndex < rows.length - 1 && <Line />}
-          </React.Fragment>
+          <Week key={rowIndex}>
+            {week.map((dateObj, colIndex) => (
+              <DateBox
+                key={colIndex}
+                type={dateObj.type}
+                onClick={() =>
+                  dateObj.type === "current" && handleDateClick(dateObj.date)
+                }
+              >
+                {dateObj.date}
+              </DateBox>
+            ))}
+          </Week>
         ))}
       </DatesContainer>
     );
@@ -144,8 +122,9 @@ const CalendarPage = () => {
         {renderDays()}
         {renderDates()}
         <MyTodoContainer>
-          <Name>{`${month}월 ${day}일`}</Name>
-          <MyTodo />
+          <Name>{`${today.getMonth() + 1}월 ${today.getDate()}일`}</Name>
+          <MyTodo categoryName="카테고리 이름" removeStyles />
+          <MyTodo categoryName="카테고리 이름" removeStyles />
         </MyTodoContainer>
       </Container>
     </>
@@ -226,6 +205,7 @@ const Week = styled.div`
 const DateBox = styled.div`
   flex: 1;
   height: 48px;
+
   display: flex;
   justify-content: center;
   align-items: center;

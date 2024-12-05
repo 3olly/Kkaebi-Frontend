@@ -1,21 +1,69 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import instance from "axios";
+import useLevelStore from "../stores/LevelStore"; // zustand store
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import GlobalStyle from "../style/GlobalStyle";
 import Header from "../components/Header";
+import Character from "../images/character/핑크수집가.svg"; // 기본 캐릭터
+import userCharacter1Img from "../images/character/프사피부미인.svg";
+import userCharacter2Img from "../images/character/프사머리숱부자.svg";
+import userCharacter3Img from "../images/character/프사핑크수집가.svg";
+import userCharacter4Img from "../images/character/프사고민해결사.svg";
+import userCharacter5Img from "../images/character/프사매듭의달인.svg";
 
-import Character from "../images/character/핑크수집가.svg";
 import Exit from "../images/Exit.svg";
 import Premium from "../images/Premium.svg";
 import Ranking from "../images/Ranking.svg";
 import People from "../images/People.svg";
 import RightArrow from "../images/RightArrow.svg";
+import Ask from "../images/Ask.svg";
+
+const characterImages = {
+  1: userCharacter1Img,
+  2: userCharacter2Img,
+  3: userCharacter3Img,
+  4: userCharacter4Img,
+  5: userCharacter5Img,
+};
 
 const MyPage = () => {
-  const [currentDate, setCurrentDate] = useState(new Date());
   const navigate = useNavigate();
+  const {
+    completionRate,
+    setCompletionRate,
+    activeLevel,
+    setActiveLevel,
+    characterImg,
+    setCharacterImg,
+  } = useLevelStore();
+
+  useEffect(() => {
+    // Mock data fetch
+    fetch("/homeMockdata.json")
+      .then((res) => res.json())
+      .then((data) => {
+        // tasks.today_completion_rate로 completionRate 값 설정
+        const { today_completion_rate } = data.tasks;
+        setCompletionRate(today_completion_rate);
+
+        // completionRate에 따라 activeLevel과 characterImg 설정
+        const level = getLevel(today_completion_rate);
+        setActiveLevel(level);
+        setCharacterImg(characterImages[level]);
+      });
+  }, [setCompletionRate, setActiveLevel, setCharacterImg]);
+
+  // completionRate에 따라 활성화된 레벨 계산
+  const getLevel = (rate) => {
+    if (rate === 100) return 7;
+    if (rate >= 99) return 6;
+    if (rate >= 80) return 5;
+    if (rate >= 60) return 4;
+    if (rate >= 40) return 3;
+    if (rate >= 20) return 2;
+    return 1; // Lv1은 0%
+  };
 
   return (
     <>
@@ -24,7 +72,6 @@ const MyPage = () => {
       <Container>
         <Top>
           <ProfileContainer>
-            <ProfileImage>{/* 캐릭터 이미지 */}</ProfileImage>
             <ProfileInfo>
               <LevelName>나는청소가시러</LevelName>
               <LevelBadge>Lv.3. 티끌수집가</LevelBadge>
@@ -37,21 +84,29 @@ const MyPage = () => {
             <TopContainer>
               <img src={Ranking} alt="Ranking" />
               <Label>이번 주 나의 레벨</Label>
+              <img src={Ask} alt="?" />
             </TopContainer>
 
             <ProgressBar>
-              <ProgressItem active />
-              <ProgressItem active />
-              <ProgressItem active />
-              <ProgressItem />
-              <ProgressItem />
+              {[1, 2, 3, 4, 5, 6, 7].map((level) => (
+                <ProgressItem key={level} active={level <= activeLevel}>
+                  {level === activeLevel && (
+                    <ProfileImage
+                      src={characterImg}
+                      alt="User Character"
+                      active={true}
+                    />
+                  )}
+                </ProgressItem>
+              ))}
             </ProgressBar>
           </LevelContainer>
         </Top>
+
         {/* 하단 버튼 영역 */}
         <Bottom>
           <ButtonContainer>
-            <ActionButton onClick={() => navigate("/manage")}>
+            <ActionButton onClick={() => navigate("/family")}>
               <BtnContainer>
                 <img src={People} alt="Ranking" />
                 <Label>우리집 관리하기</Label>
@@ -72,8 +127,6 @@ const MyPage = () => {
     </>
   );
 };
-
-export default MyPage;
 
 const Container = styled.div`
   display: flex;
@@ -103,7 +156,15 @@ const ProfileContainer = styled.div`
   gap: 16px;
 `;
 
-const ProfileImage = styled.div``;
+const ProfileImage = styled.img`
+  position: absolute;
+  top: 10px; /* ProgressItem 위에 표시 */
+  left: 50%;
+  transform: translateX(-50%);
+  visibility: ${(props) => (props.active ? "visible" : "hidden")};
+  width: 27px;
+  height: 27px;
+`;
 
 const CharacterIcon = styled.img``;
 
@@ -125,9 +186,7 @@ const LevelName = styled.div`
   color: #000;
   font-family: Pretendard;
   font-size: 20px;
-  font-style: normal;
   font-weight: 600;
-  line-height: normal;
 `;
 
 const LevelBadge = styled.div`
@@ -141,9 +200,6 @@ const LevelBadge = styled.div`
   color: #aa91e8;
   font-family: Pretendard;
   font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
 `;
 
 const LevelContainer = styled.div`
@@ -151,7 +207,7 @@ const LevelContainer = styled.div`
   align-self: stretch;
   padding: 14px 20px;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 17px;
   border-radius: 21px;
   background: #fff;
@@ -161,37 +217,33 @@ const Label = styled.div`
   color: #000;
   font-family: Pretendard;
   font-size: 16px;
-  font-style: normal;
   font-weight: 600;
-  line-height: normal;
 `;
 
 const ProgressBar = styled.div`
   display: flex;
-  gap: 4px;
+  width: 100%;
+  margin-bottom: 3px;
 `;
 
 const ProgressItem = styled.div`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: ${(props) => (props.active ? "#AA91E8" : "#E5E5E5")};
+  height: 45px;
+  width: 100%;
+  box-shadow: 0px 2px 1px 0px rgba(0, 0, 0, 0.25);
+  background-color: ${(props) => (props.active ? "#AA91E8" : "#f5f5f6")};
+  position: relative;
 `;
 
 const Bottom = styled.div`
-  display: flex;
-  justify-content: center;
-  align-self: stretch;
+  margin-top: 16px;
 `;
-
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
   align-self: stretch;
 `;
-
-const ActionButton = styled.button`
+const ActionButton = styled.div`
   display: flex;
   padding: 20px;
   justify-content: space-between;
@@ -206,8 +258,7 @@ const ActionButton = styled.button`
     background-color: #eaeaea;
   }
 `;
-
-const UpgradeButton = styled.button`
+const UpgradeButton = styled.div`
   padding: 20px 22px;
   gap: 8px;
   align-self: stretch;
@@ -228,26 +279,24 @@ const UpgradeButton = styled.button`
     background-color: #967bd9;
   }
 `;
-
-const ExitButton = styled.button`
+const ExitButton = styled.div`
   display: flex;
   padding: 20px 22px;
+  align-self: stretch;
+  align-items: center;
   align-self: stretch;
   border-radius: 11px;
   background: #fff;
   cursor: pointer;
-  align-items: center;
   gap: 8px;
-  border: none;
 
   &:hover {
-    background-color: #e5e5e5;
+    background-color: #eaeaea;
   }
 `;
-
 const BtnContainer = styled.div`
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: 8px;
 `;
+export default MyPage;

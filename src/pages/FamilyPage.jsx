@@ -8,8 +8,10 @@ import useDateStore from "../stores/DateStore"; // DateStore 가져오기
 import MyTodo from "../components/MyTodo";
 import FamilyTodo from "../components/FamilyTodo";
 import add from "../images/add.svg";
+import Copy from "../images/Copy.svg";
+import FamilyList from "../components/FamilyList";
 
-const DayPage = () => {
+const FamilyPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState("myTasks");
@@ -44,38 +46,26 @@ const DayPage = () => {
   return (
     <>
       <GlobalStyle />
-      <BackHeader title={`${month}월 ${day}일`} pageurl={"/month"} />
+      <BackHeader title={`우리집 관리하기`} pageurl={"/mypage"} />
       <Container>
-        <TabContainer>
-          <Tab
-            isActive={activeTab === "myTasks"}
-            onClick={() => setActiveTab("myTasks")}
-          >
-            나의 할 일{activeTab === "myTasks" && <Underline />}
-          </Tab>
-          <Tab
-            isActive={activeTab === "familyTasks"}
-            onClick={() => setActiveTab("familyTasks")}
-          >
-            식구들의 할 일{activeTab === "familyTasks" && <Underline />}
-          </Tab>
-        </TabContainer>
-        {activeTab === "myTasks" && (
-          <>
-            <MyTodo categoryName="청소" />
-            <MyTodo categoryName="빨래" />
-          </>
-        )}
-        {activeTab === "familyTasks" && <FamilyTodo />}
-        <Bottom>
-          <Floating src={add} onClick={() => navigate("/maketodo")}></Floating>
-        </Bottom>
+        <Top>
+          <Text>우리집 코드</Text>
+          <Code>
+            <p>123a</p>
+            <img src={Copy} />
+          </Code>
+        </Top>
+        <Top>
+          <Text>식구들</Text>
+          <FamilyList />
+        </Top>
+        <Bottom></Bottom>
       </Container>
     </>
   );
 };
 
-export default DayPage;
+export default FamilyPage;
 
 const Container = styled.div`
   display: flex;
@@ -84,6 +74,43 @@ const Container = styled.div`
   height: calc(100vh); /* Header 패딩과 NextBtn 마진 포함 */
   overflow: hidden; /* 스크롤 숨기기 */
   padding-bottom: 74px;
+`;
+
+const Top = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  align-self: stretch;
+  margin-bottom: 24px;
+`;
+
+const Text = styled.div`
+  color: #000;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24.5px; /* 122.5% */
+  letter-spacing: -0.5px;
+`;
+
+const Code = styled.div`
+  display: flex;
+  padding: 20px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 257px;
+  align-self: stretch;
+  border-radius: 8px;
+  border: 0.5px solid #cecece;
+  background: #fff;
+  color: #787878;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 `;
 
 const TabContainer = styled.div`

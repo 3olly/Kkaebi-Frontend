@@ -20,7 +20,12 @@ import HomeStatisticsPage from "./pages/HomePage/HomeStatisticsPage.jsx";
 import MyPage from "./pages/MyPage.jsx";
 
 import DayPage from "./pages/DayPage.jsx";
-import MakeTodoPage from "./pages/MakeTodoPage.jsx";
+import MakeTodoPage from "./pages/MakeTodoPage/MakeTodoPage.jsx";
+import WhereTodoPage from "./pages/MakeTodoPage/WhereTodoPage.jsx";
+import WhatTodoPage from "./pages/MakeTodoPage/WhatTodoPage.jsx";
+import WhoTodoPage from "./pages/MakeTodoPage/WhoTodoPage.jsx";
+import AskTodoPage from "./pages/MakeTodoPage/AskTodoPage.jsx";
+import FamilyPage from "./pages/FamilyPage.jsx";
 
 function App() {
   function setScreenSize() {
@@ -60,9 +65,14 @@ function App() {
           <Route path="/month" element={<CalendarPage />} />
           <Route path="/day" element={<DayPage />} />
           <Route path="/maketodo" element={<MakeTodoPage />} />
+          <Route path="/wheretodo" element={<WhereTodoPage />} />
+          <Route path="/whattodo" element={<WhatTodoPage />} />
+          <Route path="/whotodo" element={<WhoTodoPage />} />
+          <Route path="/asktodo" element={<AskTodoPage />} />
 
           {/* 마이페이지 */}
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/family" element={<FamilyPage />} />
         </Routes>
       </Router>
     </>

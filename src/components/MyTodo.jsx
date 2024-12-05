@@ -7,18 +7,31 @@ import TodoCategory from "./TodoCategory";
 import NoCheck from "../images/NoCheck.svg";
 import CheckPurple from "../images/CheckPurple.svg";
 
-const MyTodo = ({ categoryName }) => {
+const MyTodo = ({ categoryName, removeStyles }) => {
+  // 상태 관리: 이미지를 선택했는지 여부
+  const [isChecked, setIsChecked] = useState(false);
+
+  // 이미지 클릭 시 상태 토글
+  const toggleCheck = () => {
+    setIsChecked((prev) => !prev); // 상태를 반전시켜 이미지 변경
+  };
+
   return (
     <>
       <GlobalStyle />
-      <Container>
+      <Container removeStyles={removeStyles}>
         <Front>
           <Category>{categoryName}</Category>
           <TodoCategory name="거실" />
           <TodoCategory name="물걸레" />
         </Front>
 
-        <Img src={NoCheck} alt="Rectangle" />
+        {/* 이미지 클릭 시 상태 변화에 따라 src 변경 */}
+        <Img
+          src={isChecked ? CheckPurple : NoCheck}
+          alt="Rectangle"
+          onClick={toggleCheck} // 클릭 시 toggleCheck 실행
+        />
       </Container>
     </>
   );
@@ -26,21 +39,21 @@ const MyTodo = ({ categoryName }) => {
 
 export default MyTodo;
 
-const GlobalStyle = createGlobalStyle`
-
-`;
+const GlobalStyle = createGlobalStyle``;
 
 const Container = styled.div`
   display: flex;
-  padding: 16px 20px;
   justify-content: space-between;
   align-items: center;
   align-self: stretch;
   border-radius: 11px;
-  background: #fff;
   flex-direction: row;
   gap: 10px;
-  margin-top: 12px;
+
+  /* 기본 스타일 */
+  background: ${({ removeStyles }) => (removeStyles ? "none" : "#fff")};
+  padding: ${({ removeStyles }) => (removeStyles ? "0" : "16px 20px")};
+  margin-top: ${({ removeStyles }) => (removeStyles ? "0" : "12px")};
 `;
 
 const Front = styled.div`
@@ -63,4 +76,5 @@ const Category = styled.div`
 const Img = styled.img`
   width: 24px;
   align-self: stretch;
+  cursor: pointer; /* 마우스 포인터를 클릭할 수 있음을 나타냄 */
 `;
