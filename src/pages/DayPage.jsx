@@ -130,8 +130,10 @@ const Floating = styled.img`
   background: var(--purple, #aa91e8);
   box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
   cursor: pointer;
+  position: fixed; /* 화면에 고정 */
+  bottom: 50px; /* 화면 bottom에서 40px 위 */
+  right: 20px; /* 우측 20px로 위치 */
 `;
-
 const Bottom = styled.div`
   display: flex;
   justify-content: flex-end;
