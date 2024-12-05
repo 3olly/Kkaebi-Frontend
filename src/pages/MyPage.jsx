@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import useLevelStore from "../stores/LevelStore"; // zustand store
+import { useNavigate, useSearchParams } from "react-router-dom";
+
 import GlobalStyle from "../style/GlobalStyle";
 import Header from "../components/Header";
 import Character from "../images/character/핑크수집가.svg"; // 기본 캐릭터
@@ -9,6 +11,13 @@ import userCharacter2Img from "../images/character/프사머리숱부자.svg";
 import userCharacter3Img from "../images/character/프사핑크수집가.svg";
 import userCharacter4Img from "../images/character/프사고민해결사.svg";
 import userCharacter5Img from "../images/character/프사매듭의달인.svg";
+
+import Exit from "../images/Exit.svg";
+import Premium from "../images/Premium.svg";
+import Ranking from "../images/Ranking.svg";
+import People from "../images/People.svg";
+import RightArrow from "../images/RightArrow.svg";
+import Ask from "../images/Ask.svg";
 
 const characterImages = {
   1: userCharacter1Img,
@@ -19,6 +28,7 @@ const characterImages = {
 };
 
 const MyPage = () => {
+  const navigate = useNavigate();
   const {
     completionRate,
     setCompletionRate,
@@ -72,7 +82,9 @@ const MyPage = () => {
           {/* 레벨 진행도 바 */}
           <LevelContainer>
             <TopContainer>
+              <img src={Ranking} alt="Ranking" />
               <Label>이번 주 나의 레벨</Label>
+              <img src={Ask} alt="?" />
             </TopContainer>
 
             <ProgressBar>
@@ -94,13 +106,19 @@ const MyPage = () => {
         {/* 하단 버튼 영역 */}
         <Bottom>
           <ButtonContainer>
-            <ActionButton>
-              <Label>우리집 관리하기</Label>
+            <ActionButton onClick={() => navigate("/family")}>
+              <BtnContainer>
+                <img src={People} alt="Ranking" />
+                <Label>우리집 관리하기</Label>
+              </BtnContainer>
+              <img src={RightArrow} alt="Next Month" />
             </ActionButton>
             <UpgradeButton>
+              <img src={Premium} alt="Ranking" />
               <Label>플랜 업그레이드</Label>
             </UpgradeButton>
             <ExitButton>
+              <img src={Exit} alt="Ranking" />
               <Label>탈퇴하기</Label>
             </ExitButton>
           </ButtonContainer>
@@ -219,33 +237,32 @@ const ProgressItem = styled.div`
 const Bottom = styled.div`
   margin-top: 16px;
 `;
-
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
   align-self: stretch;
 `;
-
 const ActionButton = styled.div`
   display: flex;
   padding: 20px;
   justify-content: space-between;
   align-items: center;
-  align-self: stretch;
+  align-self: stretch; /* 부모 컨테이너의 너비를 상속 */
   border-radius: 11px;
   background: #fff;
+  border: none;
   cursor: pointer;
 
   &:hover {
     background-color: #eaeaea;
   }
 `;
-
 const UpgradeButton = styled.div`
   padding: 20px 22px;
   gap: 8px;
   align-self: stretch;
+
   border-radius: 11px;
   background: var(--key_purple, #aa91e8);
   cursor: pointer;
@@ -262,12 +279,12 @@ const UpgradeButton = styled.div`
     background-color: #967bd9;
   }
 `;
-
 const ExitButton = styled.div`
   display: flex;
   padding: 20px 22px;
   align-self: stretch;
   align-items: center;
+  align-self: stretch;
   border-radius: 11px;
   background: #fff;
   cursor: pointer;
@@ -277,5 +294,9 @@ const ExitButton = styled.div`
     background-color: #eaeaea;
   }
 `;
-
+const BtnContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
 export default MyPage;

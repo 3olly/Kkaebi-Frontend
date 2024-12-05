@@ -40,7 +40,7 @@ const AskTodoPage = () => {
         <Top>
           <Kkaebi>
             <KkaebiProfile src={KkaebiProfileImg} alt="깨비 프로필 이미지" />
-            <Comment>$(nickname) 님에게 집안일을 부탁할게요.</Comment>
+            <Comment>{`${nickname} 님에게 집안일을 부탁할게요.`}</Comment>
           </Kkaebi>
           <CarouselContainer>
             <Character>

@@ -25,6 +25,7 @@ import WhereTodoPage from "./pages/MakeTodoPage/WhereTodoPage.jsx";
 import WhatTodoPage from "./pages/MakeTodoPage/WhatTodoPage.jsx";
 import WhoTodoPage from "./pages/MakeTodoPage/WhoTodoPage.jsx";
 import AskTodoPage from "./pages/MakeTodoPage/AskTodoPage.jsx";
+import FamilyPage from "./pages/FamilyPage.jsx";
 
 function App() {
   function setScreenSize() {
@@ -71,6 +72,7 @@ function App() {
 
           {/* 마이페이지 */}
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/family" element={<FamilyPage />} />
         </Routes>
       </Router>
     </>
