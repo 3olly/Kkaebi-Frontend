@@ -49,7 +49,7 @@ const Header = ({ title }) => {
           <NoticeBtn
             src={Notice}
             alt="Notice Btn"
-            onClick={() => goToPage("/notice")}
+            onClick={() => goToPage("/notification")}
           />
           <Hamburger src={Menu} alt="hamburger menu" onClick={openModal} />
           {isModalOpen && (
