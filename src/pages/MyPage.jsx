@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import useLevelStore from "../stores/LevelStore"; // zustand store
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -11,6 +11,9 @@ import userCharacter2Img from "../images/character/프사머리숱부자.svg";
 import userCharacter3Img from "../images/character/프사핑크수집가.svg";
 import userCharacter4Img from "../images/character/프사고민해결사.svg";
 import userCharacter5Img from "../images/character/프사매듭의달인.svg";
+import instance from "axios";
+
+import Modal from "../components/Modal";
 
 import Exit from "../images/Exit.svg";
 import Premium from "../images/Premium.svg";
@@ -65,9 +68,35 @@ const MyPage = () => {
     return 1; // Lv1은 0%
   };
 
+  const [modal, setModal] = useState(false);
+  // 모달창의 state를 바꾸는 함수 작성 (true <-> false)
+  const openModal = () => {
+    setModal(true);
+  };
+
+  const goExit = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await instance.delete(
+        `${process.env.REACT_APP_SERVER_PORT}/mypage/remove-account/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response);
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+      alert("계정 삭제 중 오류가 발생했습니다.");
+    }
+  };
+
   return (
     <>
       <GlobalStyle />
+      {modal ? <Modal setModal={setModal} goExit={goExit} /> : null}
       <Header title="마이페이지" />
       <Container>
         <Top>
@@ -84,6 +113,7 @@ const MyPage = () => {
             <TopContainer>
               <img src={Ranking} alt="Ranking" />
               <Label>이번 주 나의 레벨</Label>
+
               <img src={Ask} alt="?" />
             </TopContainer>
 
@@ -113,11 +143,11 @@ const MyPage = () => {
               </BtnContainer>
               <img src={RightArrow} alt="Next Month" />
             </ActionButton>
-            <UpgradeButton>
+            <UpgradeButton onClick={() => navigate("/upgrade")}>
               <img src={Premium} alt="Ranking" />
               <Label>플랜 업그레이드</Label>
             </UpgradeButton>
-            <ExitButton>
+            <ExitButton onClick={openModal}>
               <img src={Exit} alt="Ranking" />
               <Label>탈퇴하기</Label>
             </ExitButton>
