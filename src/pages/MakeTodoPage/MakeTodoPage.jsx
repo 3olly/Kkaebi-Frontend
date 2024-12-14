@@ -7,28 +7,34 @@ import SignupBackBtn from "../../images/SignupBackBtn.svg";
 import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
 import CategorySelector from "../../components/CategorySelector"; // 새 컴포넌트 경로
 import BackHeader from "../../components/BackHeader";
-
-const categories = [
-  "빨래",
-  "설거지",
-  "청소",
-  "생필품 구매",
-  "쓰레기 버리기",
-  "분리수거",
-  "요리",
-  "식물 관리",
-  "반려동물 관리",
-];
+import useHouseworkTagStore from "../../stores/HouseworkTagStore"; // Store 경로
 
 const MakeTodoPage = () => {
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  // houseworkTagStore에서 categories 데이터 불러오기
+  const houseworkTag = useHouseworkTagStore((state) => state.houseworkTag);
+  const categories = Object.values(houseworkTag); // 텍스트 리스트 추출
+  const [selectedCategory, setSelectedCategory] = useState(null); // 단일 선택
+  const [selectedTag, setSelectedTag] = useState(null); // 선택된 tag 번호
   const navigate = useNavigate();
 
   const toggleCategory = (category) => {
-    if (selectedCategories.includes(category)) {
-      setSelectedCategories((prev) => prev.filter((item) => item !== category));
+    const tag = Object.keys(houseworkTag).find(
+      (key) => houseworkTag[key] === category
+    );
+    if (selectedCategory === category) {
+      setSelectedCategory(null); // 선택 해제
+      setSelectedTag(null);
     } else {
-      setSelectedCategories((prev) => [...prev, category]);
+      setSelectedCategory(category); // 선택 업데이트
+      setSelectedTag(Number(tag));
+    }
+  };
+
+  const handleNextClick = () => {
+    if (selectedTag) {
+      // 선택된 tag 값 확인
+      console.log("선택된 tag:", selectedTag);
+      navigate("/wheretodo");
     }
   };
 
@@ -44,26 +50,12 @@ const MakeTodoPage = () => {
           </Kkaebi>
           <CategorySelector
             categories={categories}
-            selectedCategories={selectedCategories}
+            selectedCategories={selectedCategory ? [selectedCategory] : []} // 단일 선택에 맞게 수정
             onToggle={toggleCategory}
           />
         </Top>
         <Bottom>
-          <NextBtn
-            $isActive={selectedCategories.length > 0}
-            onClick={() => {
-              if (selectedCategories.length > 0) {
-                const houseworkTag = selectedCategories
-                  .map((category) => categories.indexOf(category) + 1)
-                  .join(", ");
-
-                const payload = { houseworkTag };
-
-                console.log("백엔드로 전달되는 데이터:", payload);
-                navigate("/wheretodo");
-              }
-            }}
-          >
+          <NextBtn $isActive={!!selectedCategory} onClick={handleNextClick}>
             다음
           </NextBtn>
         </Bottom>
@@ -73,23 +65,6 @@ const MakeTodoPage = () => {
 };
 
 export default MakeTodoPage;
-
-const Header = styled.div`
-  display: flex;
-  padding: 20px;
-  align-items: center;
-  align-self: stretch;
-  background-color: #fafafa;
-`;
-
-const BackBtn = styled.button`
-  width: 9px;
-  height: 18px;
-  border: none;
-  background: url(${SignupBackBtn}) no-repeat center;
-  background-size: contain;
-  cursor: pointer;
-`;
 
 const Container = styled.div`
   display: flex;
