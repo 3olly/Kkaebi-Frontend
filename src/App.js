@@ -17,6 +17,7 @@ import SignupKkaebiCommentPage from "./pages/SignupPage/SignupKkaebiCommentPage.
 
 import HomeMainPage from "./pages/HomePage/HomeMainPage.jsx";
 import HomeStatisticsPage from "./pages/HomePage/HomeStatisticsPage.jsx";
+import NotificationPage from "./pages/NotificationPage.jsx";
 import MyPage from "./pages/MyPage.jsx";
 
 import DayPage from "./pages/DayPage.jsx";
@@ -26,6 +27,7 @@ import WhatTodoPage from "./pages/MakeTodoPage/WhatTodoPage.jsx";
 import WhoTodoPage from "./pages/MakeTodoPage/WhoTodoPage.jsx";
 import AskTodoPage from "./pages/MakeTodoPage/AskTodoPage.jsx";
 import FamilyPage from "./pages/FamilyPage.jsx";
+import UpgradePage from "./pages/UpgradePage.jsx";
 
 function App() {
   function setScreenSize() {
@@ -61,6 +63,9 @@ function App() {
           <Route path="/homemain" element={<HomeMainPage />} />
           <Route path="/homestatistics" element={<HomeStatisticsPage />} />
 
+          {/* 알림페이지 */}
+          <Route path="/notification" element={<NotificationPage />} />
+
           {/* 캘린더 */}
           <Route path="/month" element={<CalendarPage />} />
           <Route path="/day" element={<DayPage />} />
@@ -73,6 +78,7 @@ function App() {
           {/* 마이페이지 */}
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/family" element={<FamilyPage />} />
+          <Route path="/upgrade" element={<UpgradePage />} />
         </Routes>
       </Router>
     </>
